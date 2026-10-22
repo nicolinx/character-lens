@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Character Lens · Design options</title>
+<style>
+body{margin:0;background:#efede8;font:15px/1.5 system-ui,sans-serif;color:#1c1a16;padding:32px 32px 64px}
+h1{font-size:24px;margin:0 0 4px}p.lead{margin:0 0 28px;color:#6b665b;max-width:60ch}
+.grid{display:flex;flex-wrap:wrap;gap:40px 44px}
+figure{margin:0;flex:none;width:calc(390px*var(--s,1) + 20px)}
+.frame{width:calc(390px*var(--s,1));height:calc(844px*var(--s,1));margin:10px;border-radius:calc(36px*var(--s,1));box-shadow:0 0 0 8px #17171a,0 20px 50px rgba(0,0,0,.2);overflow:hidden;background:#fff}
+iframe{width:390px;height:844px;border:0;transform:scale(var(--s,1));transform-origin:0 0;display:block}
+figcaption{margin-top:24px}figcaption b{display:block;font-size:17px}figcaption span{color:#6b665b;font-size:14px;display:block;margin-top:4px}
+a{color:inherit}
+</style></head><body>
+<h1>Character Lens: 5 design directions</h1>
+<p class="lead">All interactive: draw on the canvas, switch language, tap Analyze. Open any option on its own for the full size, or on your phone's browser for the real feel.</p>
+<div class="grid">
+<figure><div class="frame"><iframe src="option-1-practice-sheet.html" title="option-1-practice-sheet.html"></iframe></div><figcaption><b>1 · Practice Sheet</b><span>Warm paper, ink black, seal red. Canvas looks like a calligraphy practice sheet. <a href="option-1-practice-sheet.html">Open</a></span></figcaption></figure>
+<figure><div class="frame"><iframe src="option-2-swiss.html" title="option-2-swiss.html"></iframe></div><figcaption><b>2 · Swiss Utility</b><span>Stark white, one cobalt blue, mono labels. Fast, tool-like, no decoration. <a href="option-2-swiss.html">Open</a></span></figcaption></figure>
+<figure><div class="frame"><iframe src="option-3-lexicon.html" title="option-3-lexicon.html"></iframe></div><figcaption><b>3 · Lexicon</b><span>Dictionary-entry result, serif type, deep green. Feels trustworthy and scholarly. <a href="option-3-lexicon.html">Open</a></span></figcaption></figure>
+<figure><div class="frame"><iframe src="option-4-friendly.html" title="option-4-friendly.html"></iframe></div><figcaption><b>4 · Friendly</b><span>Rounded and playful; each language has its own colour that re-tints the app. <a href="option-4-friendly.html">Open</a></span></figcaption></figure>
+<figure><div class="frame"><iframe src="option-5-canvas-first.html" title="option-5-canvas-first.html"></iframe></div><figcaption><b>5 · Canvas First</b><span>The drawing surface is the whole screen; controls float. Language is a popover. <a href="option-5-canvas-first.html">Open</a></span></figcaption></figure>
+</div><script>
+const fit=()=>document.documentElement.style.setProperty('--s',Math.max(.55,Math.min(1,(innerHeight-260)/844)).toFixed(3));
+fit();addEventListener('resize',fit);
+</script></body></html>

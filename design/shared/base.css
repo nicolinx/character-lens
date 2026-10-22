@@ -1,0 +1,23 @@
+/* Shared mechanics only (phone frame, sheet, canvas). All visuals live in each option. */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{display:grid;place-items:center;grid-template:100%/100%;overflow:hidden;background:var(--page,#e8e6e1);font-family:var(--font,system-ui,sans-serif);color:var(--text,#111)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+[hidden]{display:none!important}
+.phone{position:relative;width:390px;height:844px;flex:none;transform:scale(var(--s,1));overflow:hidden;background:var(--bg,#fff);border-radius:38px;box-shadow:0 0 0 10px #17171a,0 30px 80px rgba(0,0,0,.25);display:flex;flex-direction:column}
+@media (max-width:480px){body{display:block}.phone{transform:none;width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
+.pad{position:relative;touch-action:none}
+.pad canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;color:var(--ink,#111);cursor:crosshair}
+.pad .hint{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;text-align:center;transition:opacity .2s}
+.phone:not([data-state=ready]) .pad .hint{opacity:0}
+.scrim{position:absolute;inset:0;background:rgba(20,18,15,.32);opacity:0;pointer-events:none;transition:opacity .3s}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;overflow:auto;transform:translateY(104%);transition:transform .42s cubic-bezier(.2,.85,.25,1);background:var(--sheet,#fff)}
+.phone.open .sheet{transform:none}
+.phone.open .scrim{opacity:1;pointer-events:auto}
+.spin{display:none;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+.busy .spin{display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+button:disabled{cursor:not-allowed}
+button:focus-visible{outline:2px solid var(--focus,#1f4fff);outline-offset:2px}
+.busy .pad canvas{cursor:progress}
+@media (prefers-reduced-motion:reduce){.sheet,.scrim{transition-duration:.01s}}
