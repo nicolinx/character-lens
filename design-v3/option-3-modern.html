@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Character Lens · 3 Modern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/base.css">
+<style>
+/* Bento tiles, big type, black + lime. Soft but not generic: no gradients, no glass, no purple. */
+:root{
+  --bg:#f5f5f0; --sheet:#f5f5f0; --tile:#fff; --tint:#ebebe3; --text:#111210; --muted:#6d6f66; --line:#e1e1d8; --ink:#111210;
+  --lime:#d6f55b; --lime-d:#bfe03a; --coral:#ff6a4d; --sky:#cfe6ff; --peach:#ffe0cf; --mint:#d3f2e2;
+  --page:#dcdcd2; --focus:#111210; --sk1:#e6e6dc; --sk2:#f5f5f0;
+  --font:'Onest','Noto Sans SC','Noto Sans JP',system-ui,sans-serif;
+}
+:lang(zh-Hans){font-family:'Noto Sans SC',var(--font)} :lang(ja){font-family:'Noto Sans JP',var(--font)}
+button:focus-visible,canvas:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.top{padding:max(20px,env(safe-area-inset-top)) 20px 0;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font:800 19px/1 var(--font);letter-spacing:-.03em}
+.dot{width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--lime);display:grid;place-items:center;font:700 16px 'Noto Sans SC',sans-serif}
+.seg{display:flex;padding:4px;border-radius:24px;background:var(--tint)}
+.seg button{height:40px;padding:0 16px;border-radius:20px;font:700 14px var(--font);color:var(--muted);min-width:56px;transition:background .2s,color .2s}
+.seg button.active{background:var(--ink);color:var(--lime)}
+.model{position:relative;margin:14px 20px 0;display:flex;align-items:center;gap:8px;min-height:36px;font:500 13px var(--font);color:var(--muted)}
+.model [data-bind=model]{flex:1}
+.model::before{content:"";width:9px;height:9px;border-radius:50%;background:#b6b8ac;flex:none}
+.phone[data-model-state=ready] .model::before{background:#2fbf71}
+.phone[data-model-state=downloading] .model::before{background:var(--coral);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.model [data-act=download]{height:36px;padding:0 16px;border-radius:18px;background:var(--lime);font:700 13px var(--font)}
+.bar{position:absolute;left:0;right:0;bottom:-4px;height:5px;border-radius:3px;background:var(--tint);overflow:hidden}
+.bar .bar-fill{display:block;height:100%;width:0;background:var(--ink);border-radius:3px}
+
+.pad{margin:8px 20px 0;aspect-ratio:1;background:var(--tile);border-radius:32px;overflow:hidden;
+  background-image:radial-gradient(circle,#d9dad0 1.3px,transparent 1.5px);background-size:28px 28px;background-position:14px 14px}
+.hint{padding:0 36px}
+.hint p{font:800 30px/1.05 var(--font);letter-spacing:-.04em;color:#c9cbbf}
+.hint-lock{background:rgba(255,255,255,.92)}
+.hint-lock p{font-size:22px;color:var(--muted)}
+.status{margin:10px 20px 0;display:flex;align-items:center;gap:8px;min-height:48px}
+.pill{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:20px;background:var(--tint);font:600 13px var(--font);min-width:0}
+.phone[data-state=drawing] .pill{background:var(--lime)}
+.phone[data-state=done] .pill{background:var(--mint)}
+.phone[data-state=busy] .pill{background:var(--sky)}
+.phone[data-state=error] .pill{background:var(--coral);color:#fff}
+.tools{margin-left:auto;display:flex;gap:8px}
+.tool{width:44px;height:44px;border-radius:50%;background:var(--tile);display:grid;place-items:center;transition:transform .1s}
+.tool:active:not(:disabled){transform:scale(.92)}
+.tool:disabled{opacity:.4}
+.cands{margin:4px 20px 0;min-height:70px;display:flex;align-items:center}
+#cands{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:100%}
+.cands-empty{font:500 13.5px var(--font);color:var(--muted)}
+.chip{aspect-ratio:1;max-height:64px;border-radius:20px;background:var(--tile);font:600 28px/1 var(--font);transition:background .15s,transform .15s}
+.chip[aria-pressed=true]{background:var(--lime);transform:translateY(-3px)}
+.cta-wrap{margin:auto 20px 100px}
+.cta{width:100%;height:64px;border-radius:32px;background:var(--ink);color:#fff;font:700 17px var(--font);display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 26px;transition:transform .1s}
+.cta::after{content:"";width:48px;height:48px;border-radius:50%;background:var(--lime) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111210' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/22px no-repeat;order:3}
+.cta .spin{order:2;margin-left:auto;margin-right:12px}
+.cta:not(:disabled):active{transform:scale(.98)}
+.cta:disabled{opacity:.55}
+.phone.shake .cta{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.tabbar{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:10;display:flex;gap:2px;padding:5px;border-radius:30px;background:var(--ink)}
+.tabbar button{height:46px;padding:0 24px;border-radius:23px;font:600 14px var(--font);color:#a9ab9f;transition:all .2s}
+.tabbar button.active{background:var(--lime);color:var(--ink)}
+
+.hview{padding:6px 20px 110px}
+.hview h2{font:800 40px/1 var(--font);letter-spacing:-.045em;margin-top:max(24px,env(safe-area-inset-top))}
+.hview .sub{font:500 14px var(--font);color:var(--muted);margin:8px 0 18px}
+#hist{display:grid;gap:8px}
+.h-item{width:100%;display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:8px 16px 8px 8px;background:var(--tile);border-radius:26px;text-align:left;min-height:80px}
+.h-char{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font:600 34px/1 var(--font);background:var(--tint)}
+#hist li:nth-child(3n+1) .h-char{background:var(--lime)} #hist li:nth-child(3n+2) .h-char{background:var(--sky)} #hist li:nth-child(3n) .h-char{background:var(--peach)}
+.h-read{display:block;font:700 16px var(--font)}
+.h-def{display:block;font:400 13.5px var(--font);color:var(--muted);margin-top:2px}
+.h-side{display:grid;gap:4px;justify-items:end}
+.h-ago{font:500 12px var(--font);color:var(--muted)}
+.empty{padding:40px 10px;font:500 14px var(--font);color:var(--muted)}
+
+/* result: bento */
+.sheet{border-radius:36px 36px 0 0;max-height:94%}
+.grab{width:40px;height:5px;border-radius:3px;background:#cfcfc4;margin:10px auto 0}
+.close{position:absolute;right:14px;top:16px;width:44px;height:44px;border-radius:50%;background:var(--tile);display:grid;place-items:center;z-index:2}
+.sheet-scroll{padding:12px 16px 30px}
+.s-head{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:stretch;position:relative}
+.s-char{width:140px;height:156px;border-radius:30px;background:var(--lime);display:grid;place-items:center;font:600 92px/1 var(--font)}
+.s-meta{display:flex;flex-wrap:wrap;gap:6px;align-content:end;padding:0 0 56px 0;min-width:0;position:relative}
+.s-def{flex-basis:100%;font:800 26px/1.05 var(--font);letter-spacing:-.04em;order:-1;margin-bottom:6px}
+.tag{font:700 12px var(--font);padding:5px 11px;border-radius:14px;background:var(--tile)}
+.tag-lang{background:var(--ink);color:var(--lime)}
+.speak{position:absolute;right:0;bottom:0;height:48px;padding:0 20px 0 16px;border-radius:24px;background:var(--ink);color:var(--lime);display:flex;align-items:center;gap:8px;font:700 14px var(--font)}
+.speak::after{content:"Listen"}
+.speaking .speak{background:var(--lime);color:var(--ink)}
+.s-cands{display:flex;align-items:center;gap:6px;margin:14px 2px 0;flex-wrap:wrap}
+.s-cands-l{font:600 13px var(--font);color:var(--muted);margin-right:4px}
+.s-cands .chip{flex:none;width:44px;height:44px;aspect-ratio:auto;border-radius:15px;font-size:20px}
+.s-cands .chip.on{background:var(--ink);color:#fff;transform:none}
+.card{margin-top:10px;padding:16px;border-radius:28px;background:var(--tile)}
+.card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+.card-h h3{font:800 18px var(--font);letter-spacing:-.03em}
+.card-sub{font:500 12.5px var(--font);color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:5px;font:700 12px var(--font);padding:5px 10px;border-radius:14px}
+.verified{background:var(--mint);color:#0d6b3f}
+.ai-b{background:var(--peach);color:#9a3412}
+.kv{display:grid;grid-template-columns:1fr 1.3fr;gap:8px}
+.kv div{display:grid;gap:6px;align-content:space-between;padding:14px;border-radius:20px;background:var(--bg);min-height:92px}
+.kv dt{font:600 12.5px var(--font);color:var(--muted)}
+.kv dd{font:800 24px/1.1 var(--font);letter-spacing:-.03em}
+.kv div:first-child{background:var(--sky)}
+.kv div:first-child dt{color:#3f5a78}
+.xl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.x-item{display:grid;justify-items:start;gap:3px;padding:12px;border-radius:20px;background:var(--bg)}
+.x-item.is-current{background:var(--lime)}
+.x-lang{font:700 12px var(--font);color:var(--muted)}
+.x-item.is-current .x-lang{color:var(--ink)}
+.x-char{font:600 36px/1.1 var(--font)}
+.x-read{font:600 12.5px/1.3 var(--font)}
+.ai-block+.ai-block{margin-top:10px}
+.ai-block{padding:14px;border-radius:20px;background:var(--bg)}
+.ai-block h4{margin:0 0 8px;font:700 12.5px var(--font);color:var(--muted)}
+.comps{display:grid;gap:8px}
+.comps li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center}
+.comp-part{width:44px;height:44px;border-radius:14px;background:var(--tile);display:grid;place-items:center;font:600 24px/1 var(--font)}
+.comp-role{font:400 14.5px/1.4 var(--font)}
+.mnemonic{font:600 17px/1.4 var(--font);letter-spacing:-.01em}
+.exs{display:grid;gap:6px}
+.ex{display:grid;grid-template-columns:auto 1fr;column-gap:12px;padding:9px 12px;border-radius:14px;background:var(--tile);align-items:center}
+.ex-word{font:600 21px/1.2 var(--font);grid-row:span 2}
+.ex-read{font:700 14px var(--font)}.ex-mean{font:400 13px var(--font);color:var(--muted)}
+.flag{grid-column:1/-1;justify-self:start;margin-top:6px;font:700 11.5px var(--font);background:#ffe9a8;padding:3px 9px;border-radius:10px}
+.note{font:400 14.5px/1.45 var(--font)}
+.ai-body.in{animation:fade .45s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.ai-skel{display:grid;gap:10px;padding:4px 0}
+.ai-foot{margin-top:12px;font:400 12.5px/1.45 var(--font);color:var(--muted)}
+.s-foot{text-align:center;font:500 12px var(--font);color:var(--muted);margin-top:14px}
+.toast{background:var(--ink);color:#fff;padding:12px 20px;border-radius:24px;font:600 13.5px var(--font);bottom:100px}
+</style>
+</head>
+<body>
+<div class="phone" data-state="ready">
+  <div class="view" data-view="draw">
+    <header class="top">
+      <div class="brand"><span class="dot" aria-hidden="true">字</span>Character Lens</div>
+      <nav class="seg" aria-label="Input language"><button data-lang="CN">CN</button><button data-lang="JP">JP</button></nav>
+    </header>
+    <div class="model"><span data-bind="model"></span><button data-act="download" hidden>Download</button>
+      <div class="bar" data-bar hidden><span class="bar-fill"></span></div></div>
+
+    <div class="pad">
+      <canvas id="pad" data-width="10" role="img" aria-label="Drawing area: write one character with your finger"></canvas>
+      <div class="hint hint-draw"><p>Write it<br>here.</p></div>
+      <div class="hint hint-lock"><p>Download the<br>model first</p></div>
+    </div>
+
+    <div class="status">
+      <span class="pill"><span data-bind="status" role="status"></span></span>
+      <div class="tools">
+        <button class="tool" data-act="undo" aria-label="Undo last stroke"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>
+        <button class="tool" data-act="clear" aria-label="Clear canvas"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg></button>
+      </div>
+    </div>
+
+    <div class="cands"><div id="cands"></div></div>
+    <div class="cta-wrap"><button class="cta" data-act="analyze"><span data-bind="cta">Analyze</span><span class="spin"></span></button></div>
+  </div>
+
+  <div class="view hview" data-view="history" hidden>
+    <h2>History</h2>
+    <p class="sub"><span data-bind="histCount"></span> characters · saved on this device</p>
+    <ul id="hist"></ul>
+  </div>
+
+  <nav class="tabbar" aria-label="Main">
+    <button data-tab="draw">Write</button>
+    <button data-tab="history">History</button>
+  </nav>
+
+  <div class="scrim" data-close></div>
+  <section class="sheet" role="dialog" aria-modal="true" aria-label="Character result">
+    <div class="grab"></div>
+    <button class="close" data-act="close" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="sheet-scroll"><div id="sheetBody"></div></div>
+  </section>
+</div>
+<script src="shared/shared.js"></script>
+</body>
+</html>
