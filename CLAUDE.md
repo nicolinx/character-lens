@@ -3,7 +3,7 @@
 Flutter app for handwriting-based Han character lookup. Personal notes live in
 `CLAUDE.local.md` (gitignored, not part of this repo).
 
-Full spec: `project_requirements.md`. If this file and the PRD disagree, the PRD
+Full spec: `docs/prd.md`. If this file and the PRD disagree, the PRD
 wins for product scope and this file wins for working rules.
 
 ---
@@ -60,7 +60,7 @@ domain interfaces. No Flutter imports in `domain/`.
 
 ### UI
 
-The approved prototype is `final-design/index.html` (Ink & Paper: warm paper,
+The approved prototype is `docs/design/index.html` (Ink & Paper: warm paper,
 serif type, vermilion seal, light mode only). Match it when building screens.
 
 ## 2. Working rules for Claude Code
