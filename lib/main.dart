@@ -4,8 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
+import 'data/ink/ml_kit_ink_recognizer.dart';
+import 'features/canvas/ink_recognizer_provider.dart';
 
 void main() {
   EquatableConfig.stringify = kDebugMode;
-  runApp(const ProviderScope(child: CharacterLensApp()));
+  runApp(
+    ProviderScope(
+      overrides: [
+        inkRecognizerProvider.overrideWith((ref) {
+          final recognizer = MlKitInkRecognizer();
+          ref.onDispose(recognizer.dispose);
+          return recognizer;
+        }),
+      ],
+      child: const CharacterLensApp(),
+    ),
+  );
 }
