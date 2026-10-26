@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/entities/ink_language.dart';
-import '../../domain/entities/stroke.dart';
-import '../../domain/entities/stroke_point.dart';
-import '../../domain/entities/writing_area.dart';
-import '../../domain/failures/ink_failure.dart';
+import '../../../domain/entities/ink_language.dart';
+import '../../../domain/entities/stroke.dart';
+import '../../../domain/entities/stroke_point.dart';
+import '../../../domain/entities/writing_area.dart';
+import '../../../domain/failures/ink_failure.dart';
 import 'canvas_state.dart';
 import 'ink_recognizer_provider.dart';
 

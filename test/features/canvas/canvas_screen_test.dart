@@ -4,7 +4,7 @@ import 'package:character_lens/app.dart';
 import 'package:character_lens/domain/entities/ink_language.dart';
 import 'package:character_lens/domain/entities/model_status.dart';
 import 'package:character_lens/domain/failures/ink_failure.dart';
-import 'package:character_lens/features/canvas/ink_recognizer_provider.dart';
+import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

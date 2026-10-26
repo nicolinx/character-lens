@@ -1,6 +1,6 @@
 import 'package:character_lens/domain/entities/stroke.dart';
 import 'package:character_lens/domain/entities/stroke_point.dart';
-import 'package:character_lens/features/canvas/canvas_painters.dart';
+import 'package:character_lens/features/canvas/widgets/canvas_painters.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 StrokePoint _pt(double x, double y) => StrokePoint(x: x, y: y, timestampMs: 0);

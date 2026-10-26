@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/entities/ink_language.dart';
-import '../../domain/entities/model_status.dart';
-import '../../domain/failures/ink_failure.dart';
+import '../../../domain/entities/ink_language.dart';
+import '../../../domain/entities/model_status.dart';
+import '../../../domain/failures/ink_failure.dart';
 import 'canvas_controller.dart';
 import 'ink_recognizer_provider.dart';
 

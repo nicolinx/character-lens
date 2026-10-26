@@ -2,15 +2,15 @@ import 'package:character_lens/app.dart';
 import 'package:character_lens/domain/entities/ink_language.dart';
 import 'package:character_lens/domain/entities/model_status.dart';
 import 'package:character_lens/domain/entities/writing_area.dart';
-import 'package:character_lens/features/canvas/canvas_controller.dart';
-import 'package:character_lens/features/canvas/canvas_state.dart';
-import 'package:character_lens/features/canvas/ink_recognizer_provider.dart';
-import 'package:character_lens/features/canvas/writing_pad.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
+import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
+import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../support/fake_ink_recognizer.dart';
+import '../../../support/fake_ink_recognizer.dart';
 
 class _Pad {
   _Pad(this.tester, this.recognizer, this.container);

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
-import 'language_selector.dart';
-import 'model_status_line.dart';
-import 'writing_pad.dart';
+import 'widgets/language_selector.dart';
+import 'widgets/model_status_line.dart';
+import 'widgets/writing_pad.dart';
 
 class CanvasScreen extends StatelessWidget {
   const CanvasScreen({super.key});

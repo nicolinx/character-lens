@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text.dart';
-import '../../domain/entities/ink_language.dart';
-import '../../domain/entities/model_status.dart';
-import 'canvas_controller.dart';
-import 'ink_language_labels.dart';
-import 'model_status_controller.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text.dart';
+import '../../../domain/entities/ink_language.dart';
+import '../../../domain/entities/model_status.dart';
+import '../controllers/canvas_controller.dart';
+import '../ink_language_labels.dart';
+import '../controllers/model_status_controller.dart';
 import 'model_status_line.dart';
 
 /// CN / JP tabs. The dot on each tab shows that language's model state.

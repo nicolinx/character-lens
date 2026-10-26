@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 import 'data/ink/ml_kit_ink_recognizer.dart';
-import 'features/canvas/ink_recognizer_provider.dart';
+import 'features/canvas/controllers/ink_recognizer_provider.dart';
 
 void main() {
   EquatableConfig.stringify = kDebugMode;

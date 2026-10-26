@@ -1,7 +1,7 @@
 import 'package:flutter/rendering.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../domain/entities/stroke.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../domain/entities/stroke.dart';
 
 /// The ruled practice sheet: an inner ring, a cross and two diagonals.
 /// It never changes, so it sits on its own layer and is painted once per size.
