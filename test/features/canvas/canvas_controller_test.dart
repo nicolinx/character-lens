@@ -408,6 +408,47 @@ void main() {
     });
   });
 
+  group('writing area', () {
+    _test('a different size clears the strokes', (async, h) {
+      h.drawStroke(1);
+
+      h.controller.updateWritingArea(
+        const WritingArea(width: 200, height: 200),
+      );
+
+      expect(h.state, CanvasIdle(language: InkLanguage.chinese));
+    });
+
+    _test('the same size keeps the strokes', (async, h) {
+      h.drawStroke(1);
+
+      h.controller.updateWritingArea(_area);
+
+      expect(h.state.strokes, hasLength(1));
+    });
+
+    _test('a size set for the first time keeps the strokes', (async, h) {
+      final bare = _Harness(setArea: false);
+      bare.drawStroke(1);
+
+      bare.controller.updateWritingArea(_area);
+
+      expect(bare.state.strokes, hasLength(1));
+      bare.dispose();
+    });
+
+    _test('a new size cancels the pending recognition', (async, h) {
+      h.drawStroke(1);
+
+      h.controller.updateWritingArea(
+        const WritingArea(width: 200, height: 200),
+      );
+      async.elapse(const Duration(seconds: 2));
+
+      expect(h.recognizer.calls, isEmpty);
+    });
+  });
+
   group('selectCandidate', () {
     _test('changes the selected index of a result', (async, h) {
       h.recognizer.result = const [

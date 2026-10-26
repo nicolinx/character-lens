@@ -26,8 +26,18 @@ class CanvasController extends Notifier<CanvasState> {
     return CanvasIdle(language: InkLanguage.chinese);
   }
 
-  /// Called by the canvas widget with its current size.
-  void updateWritingArea(WritingArea area) => _writingArea = area;
+  /// Called by the canvas widget with its current size. Strokes are measured
+  /// in that size, so a different size (rotation, split screen) clears them.
+  void updateWritingArea(WritingArea area) {
+    final previous = _writingArea;
+    _writingArea = area;
+    if (previous != null &&
+        previous != area &&
+        !_locked &&
+        state.strokes.isNotEmpty) {
+      _reset(const [], state.language);
+    }
+  }
 
   void startStroke(StrokePoint point) {
     if (_locked) return;

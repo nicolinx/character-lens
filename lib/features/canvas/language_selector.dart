@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text.dart';
 import '../../domain/entities/ink_language.dart';
 import '../../domain/entities/model_status.dart';
 import 'canvas_controller.dart';
@@ -86,7 +87,13 @@ class _LanguageTab extends StatelessWidget {
                 children: [
                   Text(
                     language.glyph,
-                    style: TextStyle(fontSize: 22, height: 1, color: color),
+                    locale: language.locale,
+                    style: AppText.serif(
+                      size: 22,
+                      weight: 500,
+                      height: 1,
+                      color: color,
+                    ),
                   ),
                   const SizedBox(width: 6),
                   _StatusDot(status),
@@ -95,10 +102,10 @@ class _LanguageTab extends StatelessWidget {
               const SizedBox(height: 3),
               Text(
                 language.name.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 11,
+                style: AppText.sans(
+                  size: 11,
+                  weight: 600,
                   letterSpacing: 1.1,
-                  fontWeight: FontWeight.w600,
                   color: color,
                 ),
               ),

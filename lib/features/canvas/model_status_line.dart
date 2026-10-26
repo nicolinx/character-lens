@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text.dart';
 import '../../domain/entities/ink_language.dart';
 import '../../domain/entities/model_status.dart';
 import 'canvas_controller.dart';
@@ -48,10 +49,7 @@ class ModelStatusLine extends ConsumerWidget {
                     liveRegion: true,
                     child: Text(
                       _text(language, status),
-                      style: const TextStyle(
-                        fontSize: 12.5,
-                        color: AppColors.muted,
-                      ),
+                      style: AppText.sans(size: 12.5, color: AppColors.muted),
                     ),
                   ),
                 ),
@@ -114,9 +112,9 @@ class _ActionButton extends StatelessWidget {
             ),
             child: Text(
               label,
-              style: const TextStyle(
-                fontSize: 12.5,
-                fontWeight: FontWeight.w600,
+              style: AppText.sans(
+                size: 12.5,
+                weight: 600,
                 color: AppColors.seal,
               ),
             ),

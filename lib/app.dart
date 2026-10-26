@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'core/theme/app_theme.dart';
 import 'features/canvas/canvas_screen.dart';
 
 class CharacterLensApp extends StatelessWidget {
@@ -7,6 +8,11 @@ class CharacterLensApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(title: 'Character Lens', home: CanvasScreen());
+    return MaterialApp(
+      title: 'Character Lens',
+      theme: AppTheme.light,
+      themeMode: ThemeMode.light,
+      home: const CanvasScreen(),
+    );
   }
 }

@@ -26,6 +26,9 @@ class FakeInkRecognizer implements InkRecognizer {
   final checked = <InkLanguage>[];
   final downloaded = <InkLanguage>[];
 
+  /// The writing area of each recognition request.
+  final areas = <WritingArea>[];
+
   @override
   Future<ModelStatus> modelStatus(InkLanguage language) async {
     checked.add(language);
@@ -48,5 +51,8 @@ class FakeInkRecognizer implements InkRecognizer {
     List<Stroke> strokes,
     InkLanguage language, {
     required WritingArea writingArea,
-  }) async => const [Candidate(character: '木')];
+  }) async {
+    areas.add(writingArea);
+    return const [Candidate(character: '木')];
+  }
 }
