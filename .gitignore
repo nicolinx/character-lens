@@ -32,3 +32,6 @@ ios/Runner/GoogleService-Info.plist
 
 # Flutter DevTools local settings
 devtools_options.yaml
+
+# Test coverage output
+/coverage/
