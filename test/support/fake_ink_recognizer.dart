@@ -26,6 +26,13 @@ class FakeInkRecognizer implements InkRecognizer {
   final checked = <InkLanguage>[];
   final downloaded = <InkLanguage>[];
 
+  /// What recognition answers with, unless [recognizeError] is set.
+  List<Candidate> candidates = const [Candidate(character: '木')];
+  Object? recognizeError;
+
+  /// When set, recognition waits for it, which keeps the state Recognizing.
+  Completer<void>? recognizeGate;
+
   /// The writing area of each recognition request.
   final areas = <WritingArea>[];
 
@@ -53,6 +60,8 @@ class FakeInkRecognizer implements InkRecognizer {
     required WritingArea writingArea,
   }) async {
     areas.add(writingArea);
-    return const [Candidate(character: '木')];
+    await recognizeGate?.future;
+    if (recognizeError != null) throw recognizeError!;
+    return candidates;
   }
 }

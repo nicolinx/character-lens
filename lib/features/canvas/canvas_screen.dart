@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
+import 'widgets/analyze_button.dart';
+import 'widgets/candidate_chips.dart';
+import 'widgets/canvas_status_line.dart';
 import 'widgets/language_selector.dart';
 import 'widgets/model_status_line.dart';
 import 'widgets/writing_pad.dart';
@@ -26,6 +29,12 @@ class CanvasScreen extends StatelessWidget {
               ModelStatusLine(),
               SizedBox(height: 10),
               WritingPad(),
+              SizedBox(height: 12),
+              CanvasStatusLine(),
+              SizedBox(height: 6),
+              CandidateChips(),
+              SizedBox(height: 8),
+              AnalyzeButton(),
             ],
           ),
         ),
