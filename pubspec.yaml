@@ -38,6 +38,7 @@ dependencies:
   google_mlkit_digital_ink_recognition: ^0.16.1
   equatable: ^3.0.0
   sqflite: ^2.4.5
+  flutter_tts: ^4.2.5
 
 dev_dependencies:
   flutter_test:

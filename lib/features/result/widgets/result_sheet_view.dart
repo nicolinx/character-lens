@@ -4,6 +4,7 @@ import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
 import 'package:character_lens/domain/entities/han_language.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';
+import 'package:character_lens/features/result/controllers/speech_state.dart';
 import 'package:character_lens/features/result/result_labels.dart';
 import 'package:character_lens/features/result/widgets/across_languages_card.dart';
 import 'package:character_lens/features/result/widgets/candidate_switcher.dart';
@@ -20,6 +21,8 @@ class ResultSheetView extends StatelessWidget {
     required this.onCandidate,
     required this.onRetry,
     required this.onClose,
+    this.speech = const SpeechIdle(),
+    required this.onSpeak,
   });
 
   final LookupOpen state;
@@ -29,6 +32,10 @@ class ResultSheetView extends StatelessWidget {
   final ValueChanged<String> onCandidate;
   final VoidCallback onRetry;
   final VoidCallback onClose;
+
+  /// What the speaker button is doing, and what a tap on it asks for.
+  final SpeechState speech;
+  final ValueChanged<String> onSpeak;
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +68,16 @@ class ResultSheetView extends StatelessWidget {
                     language: language,
                     variant: view.variantNote,
                     definition: view.entry.definition,
+                    onSpeak: () => onSpeak(view.form),
+                    speaking: speech is SpeechSpeaking,
                   ),
                   _ => ResultHeader(
                     character: state.character,
                     language: language,
                   ),
                 },
+                if (speechMessage(speech) case final message?)
+                  _SpeechNote(message),
                 CandidateSwitcher(
                   candidates: candidates,
                   current: state.character,
@@ -112,6 +123,34 @@ class ResultSheetView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Why nothing was heard, or null when there is nothing to say.
+@visibleForTesting
+String? speechMessage(SpeechState speech) => switch (speech) {
+  SpeechNoVoice() => 'No voice installed for this language',
+  SpeechFailed() => 'Could not play the sound',
+  _ => null,
+};
+
+class _SpeechNote extends StatelessWidget {
+  const _SpeechNote(this.message);
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      liveRegion: true,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8, left: 4),
+        child: Text(
+          message,
+          style: AppText.sans(size: 13, color: AppColors.muted),
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:character_lens/app.dart';
 import 'package:character_lens/domain/entities/candidate.dart';
 import 'package:character_lens/domain/entities/ink_language.dart';
@@ -10,20 +12,27 @@ import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
 import 'package:character_lens/features/result/controllers/lookup_controller.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';
+import 'package:character_lens/features/result/controllers/speech_controller.dart';
+import 'package:character_lens/features/result/controllers/speech_state.dart';
+import 'package:character_lens/features/result/controllers/tts_service_provider.dart';
+import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/repositories/tts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_dictionary.dart';
 import '../../support/fake_ink_recognizer.dart';
+import '../../support/fake_tts_service.dart';
 import '../../support/sample_entries.dart';
 
 class _Screen {
-  _Screen(this.tester, this.container, this.dictionary);
+  _Screen(this.tester, this.container, this.dictionary, this.tts);
 
   final WidgetTester tester;
   final ProviderContainer container;
   final FakeDictionary dictionary;
+  final FakeTtsService tts;
 
   CanvasState get canvas => container.read(canvasControllerProvider);
   LookupState get lookup => container.read(lookupControllerProvider);
@@ -63,11 +72,13 @@ Future<_Screen> _pump(WidgetTester tester) async {
     SampleEntries.gaku,
     SampleEntries.gakuTraditional,
   ]);
+  final tts = FakeTtsService();
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
         inkRecognizerProvider.overrideWithValue(recognizer),
         dictionaryProvider.overrideWithValue(dictionary),
+        ttsServiceProvider.overrideWithValue(tts),
       ],
       child: const CharacterLensApp(),
     ),
@@ -78,6 +89,7 @@ Future<_Screen> _pump(WidgetTester tester) async {
     tester,
     ProviderScope.containerOf(tester.element(find.byType(WritingPad))),
     dictionary,
+    tts,
   );
 }
 
@@ -197,6 +209,87 @@ void main() {
 
       expect(find.text('Dictionary'), findsOneWidget);
       expect(find.text('The dictionary could not be opened'), findsNothing);
+    });
+  });
+
+  group('the speaker button', () {
+    testWidgets('speaks the written form in the language drawn', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+
+      await tester.tap(find.byTooltip('Play pronunciation'));
+      await tester.pumpAndSettle();
+
+      // The fake recognizer draws in Chinese, so the form is simplified.
+      expect(screen.tts.spoken, [('语', HanLanguage.chinese)]);
+    });
+
+    testWidgets('shows a note when no voice is installed', (tester) async {
+      final screen = await _pump(tester);
+      screen.tts.result = SpeakResult.noVoice;
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+
+      await tester.tap(find.byTooltip('Play pronunciation'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('No voice installed for this language'), findsOneWidget);
+    });
+
+    testWidgets('closing the sheet stops the speech', (tester) async {
+      final screen = await _pump(tester);
+      screen.tts.gate = Completer<void>();
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await tester.tap(find.byTooltip('Play pronunciation'));
+      await tester.pump();
+      expect(find.byTooltip('Stop pronunciation'), findsOneWidget);
+
+      await screen.closeSheet();
+
+      expect(screen.tts.stops, 1);
+      expect(
+        screen.container.read(speechControllerProvider),
+        const SpeechIdle(),
+      );
+      screen.tts.gate!.complete();
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('switching candidate stops the speech', (tester) async {
+      final screen = await _pump(tester);
+      screen.tts.gate = Completer<void>();
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await tester.tap(find.byTooltip('Play pronunciation'));
+      await tester.pump();
+
+      await tester.tap(find.byKey(const Key('switch-学')));
+      await tester.pumpAndSettle();
+
+      expect(screen.tts.stops, 1);
+      expect(find.byTooltip('Play pronunciation'), findsOneWidget);
+      screen.tts.gate!.complete();
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('a note about no voice is gone after switching candidate', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      screen.tts.result = SpeakResult.noVoice;
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await tester.tap(find.byTooltip('Play pronunciation'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('switch-学')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('No voice installed for this language'), findsNothing);
     });
   });
 }

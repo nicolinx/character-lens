@@ -3,13 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 import 'package:character_lens/app.dart';
 import 'package:character_lens/data/dictionary/sqlite_dictionary.dart';
 import 'package:character_lens/data/ink/ml_kit_ink_recognizer.dart';
+import 'package:character_lens/data/tts/flutter_tts_service.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
+import 'package:character_lens/features/result/controllers/tts_service_provider.dart';
 
 void main() {
   EquatableConfig.stringify = kDebugMode;
@@ -34,6 +37,11 @@ void main() {
           );
           ref.onDispose(dictionary.close);
           return dictionary;
+        }),
+        ttsServiceProvider.overrideWith((ref) {
+          final service = FlutterTtsService(FlutterTts());
+          ref.onDispose(service.stop);
+          return service;
         }),
       ],
       child: const CharacterLensApp(),

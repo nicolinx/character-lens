@@ -5,6 +5,7 @@ import 'package:character_lens/domain/entities/ink_language.dart';
 import 'package:character_lens/domain/failures/dictionary_failure.dart';
 import 'package:character_lens/domain/usecases/resolve_character.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';
+import 'package:character_lens/features/result/controllers/speech_state.dart';
 import 'package:character_lens/features/result/widgets/dictionary_card.dart';
 import 'package:character_lens/features/result/widgets/result_sheet_view.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _Calls {
   final candidates = <String>[];
   var retries = 0;
   var closes = 0;
+  final spoken = <String>[];
 }
 
 Future<_Calls> _pump(
@@ -47,6 +49,7 @@ Future<_Calls> _pump(
   List<String> candidates = const [],
   double textScale = 1,
   Size size = const Size(400, 1400),
+  SpeechState speech = const SpeechIdle(),
 }) async {
   await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -66,6 +69,8 @@ Future<_Calls> _pump(
             onCandidate: calls.candidates.add,
             onRetry: () => calls.retries++,
             onClose: () => calls.closes++,
+            speech: speech,
+            onSpeak: calls.spoken.add,
           ),
         ),
       ),
@@ -389,6 +394,105 @@ void main() {
       );
 
       expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('speaker button', () {
+    testWidgets('is there once the entry is loaded', (tester) async {
+      await _pump(tester, await _loaded('語', _jp));
+
+      expect(find.byTooltip('Play pronunciation'), findsOneWidget);
+    });
+
+    testWidgets('is not there while loading, not found or failed', (
+      tester,
+    ) async {
+      await _pump(tester, const LookupLoading(character: '語', language: _jp));
+      expect(find.byTooltip('Play pronunciation'), findsNothing);
+
+      await _pump(tester, const LookupNotFound(character: '語', language: _jp));
+      expect(find.byTooltip('Play pronunciation'), findsNothing);
+
+      await _pump(
+        tester,
+        const LookupFailed(
+          character: '語',
+          language: _jp,
+          failure: DictionaryUnavailableFailure(),
+        ),
+      );
+      expect(find.byTooltip('Play pronunciation'), findsNothing);
+    });
+
+    testWidgets('asks to speak the written form, not the drawn one', (
+      tester,
+    ) async {
+      // Drawn as 学 in Japanese, shown as 学; drawn as 語 in Chinese, shown 语.
+      final calls = await _pump(tester, await _loaded('語', _cn));
+
+      await tester.tap(find.byTooltip('Play pronunciation'));
+
+      expect(calls.spoken, ['语']);
+    });
+
+    testWidgets('is a stop button while speaking', (tester) async {
+      await _pump(
+        tester,
+        await _loaded('語', _jp),
+        speech: const SpeechSpeaking(),
+      );
+
+      expect(find.byTooltip('Stop pronunciation'), findsOneWidget);
+      expect(find.byTooltip('Play pronunciation'), findsNothing);
+    });
+
+    testWidgets('is at least 48 dp and fits at 1.5x on a narrow screen', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        await _loaded('語', _jp),
+        textScale: 1.5,
+        size: const Size(320, 1400),
+      );
+
+      final size = tester.getSize(find.byTooltip('Play pronunciation'));
+      expect(size.width, greaterThanOrEqualTo(48));
+      expect(size.height, greaterThanOrEqualTo(48));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('says when no voice is installed', (tester) async {
+      await _pump(
+        tester,
+        await _loaded('語', _jp),
+        speech: const SpeechNoVoice(),
+      );
+
+      expect(find.text('No voice installed for this language'), findsOneWidget);
+    });
+
+    testWidgets('says when the sound could not be played', (tester) async {
+      await _pump(
+        tester,
+        await _loaded('語', _jp),
+        speech: const SpeechFailed(),
+      );
+
+      expect(find.text('Could not play the sound'), findsOneWidget);
+    });
+
+    testWidgets('says nothing when idle or speaking', (tester) async {
+      await _pump(tester, await _loaded('語', _jp));
+      expect(find.textContaining('voice'), findsNothing);
+      expect(find.textContaining('Could not'), findsNothing);
+
+      await _pump(
+        tester,
+        await _loaded('語', _jp),
+        speech: const SpeechSpeaking(),
+      );
+      expect(find.textContaining('voice'), findsNothing);
     });
   });
 }

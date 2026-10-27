@@ -15,12 +15,18 @@ class ResultHeader extends StatelessWidget {
     required this.language,
     this.variant,
     this.definition,
+    this.onSpeak,
+    this.speaking = false,
   });
 
   final String character;
   final HanLanguage language;
   final FormVariant? variant;
   final String? definition;
+
+  /// Plays the pronunciation. Null hides the button, while nothing is loaded.
+  final VoidCallback? onSpeak;
+  final bool speaking;
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +80,33 @@ class ResultHeader extends StatelessWidget {
               ],
             ),
           ),
+          if (onSpeak != null) ...[
+            const SizedBox(width: 8),
+            _SpeakButton(onPressed: onSpeak!, speaking: speaking),
+          ],
         ],
       ),
+    );
+  }
+}
+
+class _SpeakButton extends StatelessWidget {
+  const _SpeakButton({required this.onPressed, required this.speaking});
+
+  final VoidCallback onPressed;
+  final bool speaking;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: speaking ? 'Stop pronunciation' : 'Play pronunciation',
+      onPressed: onPressed,
+      style: IconButton.styleFrom(
+        backgroundColor: speaking ? AppColors.seal : AppColors.text,
+        foregroundColor: const Color(0xFFFFFFFF),
+        fixedSize: const Size.square(52),
+      ),
+      icon: Icon(speaking ? Icons.stop_rounded : Icons.volume_up_outlined),
     );
   }
 }
