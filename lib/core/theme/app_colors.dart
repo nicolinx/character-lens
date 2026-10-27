@@ -12,7 +12,11 @@ abstract final class AppColors {
   static const sealDark = Color(0xFF8F2616);
   static const sealSoft = Color(0xFFF6E3DD);
   static const moss = Color(0xFF2F6A4F);
+  static const mossSoft = Color(0xFFE3EFE7);
   static const idleDot = Color(0xFFB9B09B);
+
+  /// Placeholder bars while the dictionary is read.
+  static const skeleton = Color(0xFFEBE3D1);
 
   /// Writing practice sheet: the ring, the cross and the diagonals.
   static const padRing = Color(0xFFE8C9C1);

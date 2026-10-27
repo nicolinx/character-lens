@@ -20,11 +20,17 @@ class LookupController extends Notifier<LookupState> {
 
   /// Opens the sheet for [character], drawn in [language]. Also used to switch
   /// to another candidate while the sheet is open.
+  ///
+  /// A sheet that already shows a result keeps it until the new answer arrives.
+  /// Going through Loading would shrink the sheet to a skeleton for a few
+  /// milliseconds and make it blink.
   Future<void> open(String character, InkLanguage language) async {
     final dictionary = ref.read(dictionaryProvider);
     final resolve = ref.read(resolveCharacterProvider);
     final request = ++_request;
-    state = LookupLoading(character: character, language: language);
+    if (state is! LookupLoaded) {
+      state = LookupLoading(character: character, language: language);
+    }
 
     LookupState next;
     try {

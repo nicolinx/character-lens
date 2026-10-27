@@ -348,6 +348,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('Pick the match'), findsOneWidget);
     expect(find.byTooltip('Undo last stroke'), findsOneWidget);
-    expect(_analyze, findsOneWidget);
+    // With a result, the main button is Look up, not Analyze.
+    expect(find.widgetWithText(FilledButton, 'Look up 木'), findsOneWidget);
   });
 }

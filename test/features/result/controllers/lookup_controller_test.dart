@@ -155,21 +155,35 @@ void main() {
   });
 
   group('switching candidate', () {
-    test(
-      'goes from one Loaded to Loading and Loaded for the new one',
-      () async {
-        await h.controller.open('語', _jp);
-        h.states.clear();
+    test('goes from one Loaded straight to Loaded for the new one', () async {
+      await h.controller.open('語', _jp);
+      h.states.clear();
 
-        await h.controller.open('木', _jp);
+      await h.controller.open('木', _jp);
 
-        expect(h.states, [
-          const LookupLoading(character: '木', language: _jp),
-          isA<LookupLoaded>(),
-        ]);
-        expect((h.state as LookupLoaded).character, '木');
-      },
-    );
+      expect(h.states, [isA<LookupLoaded>()]);
+      expect((h.state as LookupLoaded).character, '木');
+    });
+
+    test('keeps the old result while the new one is on its way', () async {
+      await h.controller.open('語', _jp);
+      h.dictionary.gates['木'] = Completer<void>();
+
+      final pending = h.controller.open('木', _jp);
+
+      expect((h.state as LookupLoaded).character, '語');
+      h.dictionary.gates['木']!.complete();
+      await pending;
+      expect((h.state as LookupLoaded).character, '木');
+    });
+
+    test('switching to a character that is missing is NotFound', () async {
+      await h.controller.open('語', _jp);
+
+      await h.controller.open('水', _jp);
+
+      expect(h.state, const LookupNotFound(character: '水', language: _jp));
+    });
   });
 
   group('stale answers', () {

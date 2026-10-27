@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
-import 'package:character_lens/features/canvas/widgets/analyze_button.dart';
 import 'package:character_lens/features/canvas/widgets/candidate_chips.dart';
 import 'package:character_lens/features/canvas/widgets/canvas_status_line.dart';
 import 'package:character_lens/features/canvas/widgets/language_selector.dart';
 import 'package:character_lens/features/canvas/widgets/model_status_line.dart';
+import 'package:character_lens/features/canvas/widgets/primary_action_button.dart';
 import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
 
 class CanvasScreen extends StatelessWidget {
@@ -34,7 +34,7 @@ class CanvasScreen extends StatelessWidget {
               SizedBox(height: 6),
               CandidateChips(),
               SizedBox(height: 8),
-              AnalyzeButton(),
+              PrimaryActionButton(),
             ],
           ),
         ),
