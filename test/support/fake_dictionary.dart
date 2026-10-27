@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:character_lens/domain/entities/character_entry.dart';
 import 'package:character_lens/domain/repositories/dictionary.dart';
 
@@ -19,6 +21,13 @@ class FakeDictionary implements Dictionary {
   /// When set, every call throws it.
   Object? error;
 
+  /// Errors for single characters, thrown by [lookup] only.
+  final lookupErrors = <String, Object>{};
+
+  /// A lookup of a character listed here waits for its completer, which keeps
+  /// that lookup in flight.
+  final gates = <String, Completer<void>>{};
+
   /// The characters looked up, in order.
   final lookups = <String>[];
 
@@ -28,7 +37,9 @@ class FakeDictionary implements Dictionary {
   @override
   Future<CharacterEntry?> lookup(String character) async {
     lookups.add(character);
+    await gates[character]?.future;
     if (error != null) throw error!;
+    if (lookupErrors.containsKey(character)) throw lookupErrors[character]!;
     return _entries[character];
   }
 

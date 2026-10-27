@@ -17,7 +17,7 @@ Requirements that shaped the choice:
 
 Use Riverpod 3.4.3 (`flutter_riverpod`) with sealed state classes and `Equatable`.
 
-- **Sealed `CanvasState`:** `CanvasIdle`, `CanvasRecognizing`, `CanvasResult` (candidates and selected index) and `CanvasError` (a typed `InkFailure`). The PRD also lists a LookingUp state. It does not exist yet and arrives with the dictionary in M2.
+- **Sealed `CanvasState`:** `CanvasIdle`, `CanvasRecognizing`, `CanvasResult` (candidates and selected index) and `CanvasError` (a typed `InkFailure`). The PRD also lists a LookingUp state. In M2 it became its own sealed `LookupState` (`LookupClosed`, `LookupLoading`, `LookupLoaded`, `LookupNotFound`, `LookupFailed`) with a separate `LookupController`, not a fifth `CanvasState`. The result sheet opens, switches candidate and closes on its own, and the strokes and candidates must be as they were when it closes. The controller drops an answer for a character the user has already left, or that arrives after the sheet was closed.
 - **Strokes and language are part of every state,** so a result can never be shown for different strokes than the ones it was recognized from. The cost is that each transition passes them along.
 - **`CanvasController` is a `Notifier<CanvasState>`.** It owns the stroke list, the 600 ms debounce timer, and the rules (input is locked while recognizing, switching language clears strokes, a changed writing area clears strokes). State is never modified in place: every change builds a new list, which also lets the stroke painter compare by identity.
 - **`ModelStatusController` is a `Notifier<Map<InkLanguage, ModelStatus>>`.** A missing key means "not checked yet".
