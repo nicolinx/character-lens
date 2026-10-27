@@ -1,12 +1,12 @@
-import '../../domain/entities/candidate.dart';
-import '../../domain/entities/ink_language.dart';
-import '../../domain/entities/model_status.dart';
-import '../../domain/entities/stroke.dart';
-import '../../domain/entities/writing_area.dart';
-import '../../domain/failures/ink_failure.dart';
-import '../../domain/repositories/ink_recognizer.dart';
-import 'ink_plugin.dart';
-import 'stroke_mapper.dart';
+import 'package:character_lens/domain/entities/candidate.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/entities/model_status.dart';
+import 'package:character_lens/domain/entities/stroke.dart';
+import 'package:character_lens/domain/entities/writing_area.dart';
+import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/domain/repositories/ink_recognizer.dart';
+import 'package:character_lens/data/ink/ink_plugin.dart';
+import 'package:character_lens/data/ink/stroke_mapper.dart';
 
 class MlKitInkRecognizer implements InkRecognizer {
   MlKitInkRecognizer({

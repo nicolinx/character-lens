@@ -3,9 +3,9 @@ import 'dart:typed_data';
 
 import 'package:sqflite/sqlite_api.dart';
 
-import '../../domain/entities/character_entry.dart';
-import '../../domain/failures/dictionary_failure.dart';
-import '../../domain/repositories/dictionary.dart';
+import 'package:character_lens/domain/entities/character_entry.dart';
+import 'package:character_lens/domain/failures/dictionary_failure.dart';
+import 'package:character_lens/domain/repositories/dictionary.dart';
 
 /// Reads the bundled asset. In the app this is `rootBundle`; tests pass bytes.
 typedef AssetLoader = Future<Uint8List> Function();

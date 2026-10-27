@@ -1,4 +1,4 @@
-import 'ink_language.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
 
 /// The three languages a Han character is read in. Input is Chinese or
 /// Japanese ([InkLanguage]); Korean (Hanja) only appears in the output.

@@ -1,7 +1,7 @@
-import '../entities/character_entry.dart';
-import '../entities/character_view.dart';
-import '../entities/han_language.dart';
-import '../repositories/dictionary.dart';
+import 'package:character_lens/domain/entities/character_entry.dart';
+import 'package:character_lens/domain/entities/character_view.dart';
+import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/repositories/dictionary.dart';
 
 /// Turns an entry into what the sheet shows for each language.
 ///

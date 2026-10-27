@@ -5,11 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
-import 'app.dart';
-import 'data/dictionary/sqlite_dictionary.dart';
-import 'data/ink/ml_kit_ink_recognizer.dart';
-import 'features/canvas/controllers/ink_recognizer_provider.dart';
-import 'features/dictionary_provider.dart';
+import 'package:character_lens/app.dart';
+import 'package:character_lens/data/dictionary/sqlite_dictionary.dart';
+import 'package:character_lens/data/ink/ml_kit_ink_recognizer.dart';
+import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
+import 'package:character_lens/features/dictionary_provider.dart';
 
 void main() {
   EquatableConfig.stringify = kDebugMode;

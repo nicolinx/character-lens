@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../domain/entities/character_view.dart';
-import '../../../domain/entities/ink_language.dart';
-import '../../../domain/failures/dictionary_failure.dart';
+import 'package:character_lens/domain/entities/character_view.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/failures/dictionary_failure.dart';
 
 /// The result sheet's own state. It is separate from `CanvasState` because the
 /// sheet opens and closes on its own, and closing it must leave the strokes and

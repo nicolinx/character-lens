@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
-import '../controllers/canvas_controller.dart';
-import '../controllers/canvas_state.dart';
-import '../ink_language_labels.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
+import 'package:character_lens/core/theme/app_text.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
+import 'package:character_lens/features/canvas/ink_language_labels.dart';
 
 /// The recognized candidates, best first. Tapping one selects it.
 class CandidateChips extends ConsumerWidget {

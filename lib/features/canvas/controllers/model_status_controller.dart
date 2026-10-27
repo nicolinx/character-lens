@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../domain/entities/ink_language.dart';
-import '../../../domain/entities/model_status.dart';
-import '../../../domain/failures/ink_failure.dart';
-import 'canvas_controller.dart';
-import 'ink_recognizer_provider.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/entities/model_status.dart';
+import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
+import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 
 /// Status per language. A language with no entry has not been checked yet.
 typedef ModelStatuses = Map<InkLanguage, ModelStatus>;

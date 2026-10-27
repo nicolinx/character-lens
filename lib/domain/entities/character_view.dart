@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'character_entry.dart';
-import 'han_language.dart';
+import 'package:character_lens/domain/entities/character_entry.dart';
+import 'package:character_lens/domain/entities/han_language.dart';
 
 /// The readings of a character in one language.
 class LanguageReading extends Equatable {

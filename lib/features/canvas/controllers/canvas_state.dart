@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../domain/entities/candidate.dart';
-import '../../../domain/entities/ink_language.dart';
-import '../../../domain/entities/stroke.dart';
-import '../../../domain/failures/ink_failure.dart';
+import 'package:character_lens/domain/entities/candidate.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/entities/stroke.dart';
+import 'package:character_lens/domain/failures/ink_failure.dart';
 
 /// Strokes and language are part of every state, so a result can never be
 /// shown for strokes other than the ones it was recognized from.

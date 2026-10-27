@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../domain/repositories/dictionary.dart';
+import 'package:character_lens/domain/repositories/dictionary.dart';
 
 /// Overridden in main.dart with the SQLite dictionary, and in tests with a fake.
 /// Shared by the canvas (candidate filter) and the result sheet (lookup), so it

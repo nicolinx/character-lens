@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../entities/ink_language.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
 
 sealed class InkFailure extends Equatable implements Exception {
   const InkFailure();

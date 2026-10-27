@@ -2,13 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
-import '../../../domain/entities/stroke_point.dart';
-import '../../../domain/entities/writing_area.dart';
-import '../controllers/canvas_controller.dart';
-import 'canvas_painters.dart';
-import '../controllers/model_status_controller.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
+import 'package:character_lens/core/theme/app_text.dart';
+import 'package:character_lens/domain/entities/stroke_point.dart';
+import 'package:character_lens/domain/entities/writing_area.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
+import 'package:character_lens/features/canvas/widgets/canvas_painters.dart';
+import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
 
 /// The square drawing surface. Pointer events go to [CanvasController]; the
 /// practice sheet, the strokes and the message are separate layers, so a new

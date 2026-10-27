@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../domain/usecases/recognize_characters.dart';
-import '../../dictionary_provider.dart';
-import 'ink_recognizer_provider.dart';
+import 'package:character_lens/domain/usecases/recognize_characters.dart';
+import 'package:character_lens/features/dictionary_provider.dart';
+import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 
 final recognizeCharactersProvider = Provider<RecognizeCharacters>(
   (ref) => RecognizeCharacters(

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
-import '../../../domain/failures/ink_failure.dart';
-import '../controllers/canvas_controller.dart';
-import '../controllers/canvas_state.dart';
-import '../controllers/model_status_controller.dart';
-import '../ink_language_labels.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
+import 'package:character_lens/core/theme/app_text.dart';
+import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
+import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
+import 'package:character_lens/features/canvas/ink_language_labels.dart';
 
 /// What the line under the pad says. Errors come from the state, so a failed
 /// recognition keeps its message until the user draws again.

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'core/theme/app_theme.dart';
-import 'features/canvas/canvas_screen.dart';
+import 'package:character_lens/core/theme/app_theme.dart';
+import 'package:character_lens/features/canvas/canvas_screen.dart';
 
 class CharacterLensApp extends StatelessWidget {
   const CharacterLensApp({super.key});

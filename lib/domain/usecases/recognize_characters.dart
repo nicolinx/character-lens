@@ -1,9 +1,9 @@
-import '../entities/candidate.dart';
-import '../entities/ink_language.dart';
-import '../entities/stroke.dart';
-import '../entities/writing_area.dart';
-import '../repositories/dictionary.dart';
-import '../repositories/ink_recognizer.dart';
+import 'package:character_lens/domain/entities/candidate.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/entities/stroke.dart';
+import 'package:character_lens/domain/entities/writing_area.dart';
+import 'package:character_lens/domain/repositories/dictionary.dart';
+import 'package:character_lens/domain/repositories/ink_recognizer.dart';
 
 /// Recognizes strokes and keeps only candidates the dictionary can look up.
 ///

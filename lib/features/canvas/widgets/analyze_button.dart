@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
-import '../controllers/canvas_controller.dart';
-import '../controllers/canvas_state.dart';
-import '../controllers/model_status_controller.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
+import 'package:character_lens/core/theme/app_text.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
+import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
 
 /// Recognizes now instead of waiting for the pause. Also the way to try again
 /// after an error.

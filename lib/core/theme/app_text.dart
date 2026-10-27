@@ -1,6 +1,6 @@
 import 'package:flutter/painting.dart';
 
-import 'app_colors.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
 
 /// Type styles for the two families in the design: Instrument Sans for the UI
 /// and Newsreader for characters, titles and prompts.

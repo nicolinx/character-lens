@@ -1,4 +1,4 @@
-import '../entities/character_entry.dart';
+import 'package:character_lens/domain/entities/character_entry.dart';
 
 abstract interface class Dictionary {
   /// The entry for a single character, or null when it is not in the

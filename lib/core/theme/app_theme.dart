@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'app_colors.dart';
-import 'app_text.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
+import 'package:character_lens/core/theme/app_text.dart';
 
 /// Ink & Paper. Light mode only, by design.
 abstract final class AppTheme {

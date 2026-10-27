@@ -1,8 +1,8 @@
-import '../entities/candidate.dart';
-import '../entities/ink_language.dart';
-import '../entities/model_status.dart';
-import '../entities/stroke.dart';
-import '../entities/writing_area.dart';
+import 'package:character_lens/domain/entities/candidate.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/entities/model_status.dart';
+import 'package:character_lens/domain/entities/stroke.dart';
+import 'package:character_lens/domain/entities/writing_area.dart';
 
 abstract interface class InkRecognizer {
   /// Whether the model for [language] is on the device. Never downloads.
