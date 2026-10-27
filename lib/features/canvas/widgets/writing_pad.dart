@@ -10,9 +10,6 @@ import 'package:character_lens/features/canvas/controllers/canvas_controller.dar
 import 'package:character_lens/features/canvas/widgets/canvas_painters.dart';
 import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
 
-/// The square drawing surface. Pointer events go to [CanvasController]; the
-/// practice sheet, the strokes and the message are separate layers, so a new
-/// point repaints only the stroke layer.
 class WritingPad extends ConsumerStatefulWidget {
   const WritingPad({super.key});
 
@@ -77,8 +74,8 @@ class _WritingPadState extends ConsumerState<WritingPad> {
     );
   }
 
-  /// Tells the controller the size strokes are measured in. Done after the
-  /// frame, because the controller may clear strokes when the size changes.
+  /// Done after the frame, because the controller may clear strokes when the size
+  /// changes.
   void _reportSize(Size size) {
     if (size == _size) return;
     _size = size;
@@ -108,7 +105,6 @@ class _WritingPadState extends ConsumerState<WritingPad> {
     _controller.endStroke();
   }
 
-  /// A finger that slides off the pad keeps drawing along its edge.
   StrokePoint _pointFor(PointerEvent event) => StrokePoint(
     x: event.localPosition.dx.clamp(0, _size.width),
     y: event.localPosition.dy.clamp(0, _size.height),
@@ -128,7 +124,6 @@ class _StrokeLayer extends ConsumerWidget {
   }
 }
 
-/// The prompt while the pad is empty, or the reason drawing is off.
 class _PadMessage extends ConsumerWidget {
   const _PadMessage();
 

@@ -9,7 +9,6 @@ import 'package:character_lens/features/canvas/controllers/canvas_controller.dar
 import 'package:character_lens/features/canvas/ink_language_labels.dart';
 import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
 
-/// Short state of a model, for the screen reader and the tabs.
 String describeModelStatus(ModelStatus? status) => switch (status) {
   null => 'checking model',
   ModelNotDownloaded() => 'model not downloaded',
@@ -18,8 +17,6 @@ String describeModelStatus(ModelStatus? status) => switch (status) {
   ModelFailed() => 'model download failed',
 };
 
-/// One line under the tabs: the selected language's model state, with a
-/// Download or Retry button when there is something to do.
 class ModelStatusLine extends ConsumerWidget {
   const ModelStatusLine({super.key});
 
@@ -88,7 +85,6 @@ class ModelStatusLine extends ConsumerWidget {
   };
 }
 
-/// A 32 dp pill inside a 48 dp tap target.
 class _ActionButton extends StatelessWidget {
   const _ActionButton({required this.label, required this.onTap});
 

@@ -7,7 +7,6 @@ import 'package:character_lens/features/canvas/controllers/canvas_controller.dar
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/ink_language_labels.dart';
 
-/// The recognized candidates, best first. Tapping one selects it.
 class CandidateChips extends ConsumerWidget {
   const CandidateChips({super.key});
 

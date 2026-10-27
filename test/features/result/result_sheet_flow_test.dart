@@ -37,7 +37,6 @@ class _Screen {
   CanvasState get canvas => container.read(canvasControllerProvider);
   LookupState get lookup => container.read(lookupControllerProvider);
 
-  /// One short stroke and the pause that starts recognition.
   Future<void> drawAndRecognize() async {
     final origin = tester.getTopLeft(find.byType(WritingPad));
     final gesture = await tester.startGesture(origin + const Offset(60, 60));

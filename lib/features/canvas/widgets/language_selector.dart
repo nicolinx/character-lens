@@ -10,7 +10,6 @@ import 'package:character_lens/features/canvas/ink_language_labels.dart';
 import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
 import 'package:character_lens/features/canvas/widgets/model_status_line.dart';
 
-/// CN / JP tabs. The dot on each tab shows that language's model state.
 class LanguageSelector extends ConsumerWidget {
   const LanguageSelector({super.key});
 

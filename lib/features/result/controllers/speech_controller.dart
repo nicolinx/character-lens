@@ -9,14 +9,12 @@ final speechControllerProvider =
     NotifierProvider<SpeechController, SpeechState>(SpeechController.new);
 
 class SpeechController extends Notifier<SpeechState> {
-  /// Counts speeches. An answer is used only if the speech was not stopped or
-  /// replaced while it was running.
+  /// Drops the answer of a speech that was stopped or replaced.
   int _request = 0;
 
   @override
   SpeechState build() => const SpeechIdle();
 
-  /// Speaks [text] in [language]. While speaking, a second call stops instead.
   Future<void> speak(String text, HanLanguage language) async {
     if (state is SpeechSpeaking) return stop();
 
@@ -34,7 +32,6 @@ class SpeechController extends Notifier<SpeechState> {
     };
   }
 
-  /// Stops any speech and clears a message. Safe to call when idle.
   Future<void> stop() async {
     _request++;
     final wasSpeaking = state is SpeechSpeaking;

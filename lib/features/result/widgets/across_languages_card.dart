@@ -7,8 +7,6 @@ import 'package:character_lens/domain/entities/han_language.dart';
 import 'package:character_lens/features/result/result_labels.dart';
 import 'package:character_lens/features/result/widgets/result_card.dart';
 
-/// The same character in Chinese, Japanese and Korean: how it is written and
-/// read in each, with the language it was drawn in highlighted.
 class AcrossLanguagesCard extends StatelessWidget {
   const AcrossLanguagesCard({super.key, required this.view});
 

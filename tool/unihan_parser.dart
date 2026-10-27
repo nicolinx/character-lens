@@ -1,8 +1,5 @@
-/// Pure parsing for the Unihan text files. No file or database access here, so
-/// every rule can be tested with a few lines of text.
 library;
 
-/// The Unihan fields the dictionary uses.
 const unihanFields = {
   'kDefinition',
   'kMandarin',
@@ -19,7 +16,6 @@ final _codePoint = RegExp(r'^U\+([0-9A-F]{4,6})$');
 final _version = RegExp(r'^# Unicode Version (\S+)');
 final _date = RegExp(r'^# Date: (\d{4}-\d{2}-\d{2})');
 
-/// One dictionary row. Lists stay lists here; the writer decides the storage.
 class DictionaryRow {
   const DictionaryRow({
     required this.codepoint,
@@ -48,8 +44,6 @@ class DictionaryRow {
   final int? strokes;
 }
 
-/// Reads the Unicode version and file date from the comment block at the top
-/// of a file. Stops at the first line that is not a comment.
 ({String? version, String? date}) parseHeader(Iterable<String> lines) {
   String? version;
   String? date;
@@ -61,8 +55,6 @@ class DictionaryRow {
   return (version: version, date: date);
 }
 
-/// Adds the wanted fields of every data line to [into], keyed by code point.
-/// Comment, blank and malformed lines are skipped.
 void parseUnihanLines(
   Iterable<String> lines,
   Map<int, Map<String, String>> into,
@@ -84,7 +76,6 @@ void parseUnihanLines(
   }
 }
 
-/// Space separated values, without empty items.
 List<String> splitValues(String value) => [
   for (final item in value.split(' '))
     if (item.isNotEmpty) item,
@@ -110,7 +101,6 @@ List<String> parseVariants(String value) {
   return variants;
 }
 
-/// The first number of the field, or null when it is not a number.
 int? parseStrokes(String value) =>
     int.tryParse(splitValues(value).firstOrNull ?? '');
 

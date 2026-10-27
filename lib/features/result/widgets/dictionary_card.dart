@@ -6,8 +6,6 @@ import 'package:character_lens/domain/entities/character_view.dart';
 import 'package:character_lens/features/result/result_labels.dart';
 import 'package:character_lens/features/result/widgets/result_card.dart';
 
-/// The reading in the language it was drawn in, and the meaning. Everything
-/// here comes from the dictionary.
 class DictionaryCard extends StatelessWidget {
   const DictionaryCard({super.key, required this.view});
 

@@ -11,19 +11,14 @@ final lookupControllerProvider =
     NotifierProvider<LookupController, LookupState>(LookupController.new);
 
 class LookupController extends Notifier<LookupState> {
-  /// Counts requests. An answer is used only if no newer request or close
-  /// happened while it was on its way.
+  /// Drops an answer when a newer request or a close came first.
   int _request = 0;
 
   @override
   LookupState build() => const LookupClosed();
 
-  /// Opens the sheet for [character], drawn in [language]. Also used to switch
-  /// to another candidate while the sheet is open.
-  ///
-  /// A sheet that already shows a result keeps it until the new answer arrives.
-  /// Going through Loading would shrink the sheet to a skeleton for a few
-  /// milliseconds and make it blink.
+  /// Also used to switch candidate. A sheet that already shows a result keeps it
+  /// until the new answer arrives, so it does not shrink to a skeleton and blink.
   Future<void> open(String character, InkLanguage language) async {
     final dictionary = ref.read(dictionaryProvider);
     final resolve = ref.read(resolveCharacterProvider);

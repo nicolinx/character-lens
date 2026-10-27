@@ -4,14 +4,12 @@ import 'package:character_lens/domain/entities/character_view.dart';
 import 'package:character_lens/domain/entities/ink_language.dart';
 import 'package:character_lens/domain/failures/dictionary_failure.dart';
 
-/// The result sheet's own state. It is separate from `CanvasState` because the
-/// sheet opens and closes on its own, and closing it must leave the strokes and
+/// Separate from `CanvasState`: closing the sheet must leave the strokes and
 /// the candidates as they were.
 sealed class LookupState extends Equatable {
   const LookupState();
 }
 
-/// No sheet.
 class LookupClosed extends LookupState {
   const LookupClosed();
 
@@ -19,9 +17,6 @@ class LookupClosed extends LookupState {
   List<Object?> get props => [];
 }
 
-/// A sheet is open for [character]. Every open state names the character and
-/// the language it was drawn in, so the sheet can show a header while it loads
-/// and a retry knows what to ask for.
 sealed class LookupOpen extends LookupState {
   const LookupOpen({required this.character, required this.language});
 
@@ -49,12 +44,10 @@ class LookupLoaded extends LookupOpen {
   List<Object?> get props => [...super.props, view];
 }
 
-/// The dictionary was read and has no entry for [character].
 class LookupNotFound extends LookupOpen {
   const LookupNotFound({required super.character, required super.language});
 }
 
-/// The dictionary could not be read.
 class LookupFailed extends LookupOpen {
   const LookupFailed({
     required super.character,

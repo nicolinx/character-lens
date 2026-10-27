@@ -8,12 +8,8 @@ abstract interface class InkRecognizer {
   /// Whether the model for [language] is on the device. Never downloads.
   Future<ModelStatus> modelStatus(InkLanguage language);
 
-  /// Downloads the model for [language] and completes with [ModelReady] or
-  /// [ModelFailed].
-  ///
-  /// A Future rather than a Stream: ML Kit reports no progress, only a result
-  /// when the download ends, so a stream could emit nothing but start and end.
-  /// Callers show [ModelDownloading] themselves while they await.
+  /// Downloads the model. A Future, not a Stream: ML Kit reports no progress,
+  /// only a result when the download ends.
   Future<ModelStatus> downloadModel(InkLanguage language);
 
   /// Returns candidates best first, or an empty list when nothing was

@@ -16,7 +16,6 @@ abstract final class SampleEntries {
     totalStrokes: 4,
   );
 
-  /// Traditional form. Has a simplified variant and readings in all languages.
   static final go = CharacterEntry(
     character: '語',
     definition: 'language, words; saying, expression',
@@ -28,7 +27,6 @@ abstract final class SampleEntries {
     totalStrokes: 14,
   );
 
-  /// Simplified form of 語. Unihan gives it no Japanese or Korean readings.
   static final goSimplified = CharacterEntry(
     character: '语',
     definition: 'language, words; saying, expression',
@@ -37,7 +35,6 @@ abstract final class SampleEntries {
     totalStrokes: 9,
   );
 
-  /// Simplified in China and the form Japan uses. Has its own readings.
   static final gaku = CharacterEntry(
     character: '学',
     definition: 'learning, knowledge; school',
@@ -90,9 +87,7 @@ abstract final class SampleEntries {
     simplified: ['气'],
   );
 
-  /// A character with a reading in one language and no definition.
   static final noDefinition = CharacterEntry(character: '丂', mandarin: ['kǎo']);
 
-  /// A character with neither readings nor a definition.
   static final bare = CharacterEntry(character: '〇');
 }

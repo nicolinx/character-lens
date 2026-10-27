@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:character_lens/domain/entities/character_entry.dart';
 import 'package:character_lens/domain/entities/han_language.dart';
 
-/// The readings of a character in one language.
 class LanguageReading extends Equatable {
   const LanguageReading({
     this.readings = const [],
@@ -11,10 +10,8 @@ class LanguageReading extends Equatable {
     this.borrowedFrom,
   });
 
-  /// Pinyin, Japanese on, or Hangul, depending on the language.
   final List<String> readings;
 
-  /// Japanese kun. Empty for the other languages.
   final List<String> kun;
 
   /// The variant character the readings came from, when the drawn character
@@ -29,7 +26,6 @@ class LanguageReading extends Equatable {
 
 enum VariantKind { simplified, traditional }
 
-/// The other written form shown next to the character, like "Traditional 學".
 class FormVariant extends Equatable {
   const FormVariant(this.kind, this.character);
 
@@ -40,7 +36,6 @@ class FormVariant extends Equatable {
   List<Object?> get props => [kind, character];
 }
 
-/// A character prepared for the result sheet.
 class CharacterView extends Equatable {
   const CharacterView({
     required this.entry,
@@ -50,13 +45,10 @@ class CharacterView extends Equatable {
     this.variantNote,
   });
 
-  /// The entry of the character that was drawn.
   final CharacterEntry entry;
 
-  /// The language the user drew in.
   final HanLanguage selected;
 
-  /// How the character is written in each language.
   final Map<HanLanguage, String> forms;
 
   final Map<HanLanguage, LanguageReading> readings;
@@ -64,7 +56,6 @@ class CharacterView extends Equatable {
   /// Null when the selected language's form has no other written form to show.
   final FormVariant? variantNote;
 
-  /// The character as written in the selected language.
   String get form => forms[selected]!;
 
   @override

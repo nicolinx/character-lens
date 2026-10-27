@@ -6,8 +6,6 @@ import 'package:character_lens/domain/entities/character_view.dart';
 import 'package:character_lens/domain/entities/han_language.dart';
 import 'package:character_lens/features/result/result_labels.dart';
 
-/// The large character, the language it was drawn in, a tag when the written
-/// form differs, and the definition.
 class ResultHeader extends StatelessWidget {
   const ResultHeader({
     super.key,
@@ -24,7 +22,6 @@ class ResultHeader extends StatelessWidget {
   final FormVariant? variant;
   final String? definition;
 
-  /// Plays the pronunciation. Null hides the button, while nothing is loaded.
   final VoidCallback? onSpeak;
   final bool speaking;
 

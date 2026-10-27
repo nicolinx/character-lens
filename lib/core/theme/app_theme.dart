@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
 
-/// Ink & Paper. Light mode only, by design.
 abstract final class AppTheme {
   static ThemeData get light {
     const scheme = ColorScheme.light(

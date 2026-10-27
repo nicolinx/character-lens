@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
 
-/// A bordered card with a small title and an optional badge on the right.
 class ResultCard extends StatelessWidget {
   const ResultCard({
     super.key,
@@ -32,8 +31,6 @@ class ResultCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // A Wrap, so the badge moves under the title when large text leaves
-            // no room beside it.
             Wrap(
               alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,

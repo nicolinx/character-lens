@@ -26,8 +26,8 @@ class CanvasController extends Notifier<CanvasState> {
     return CanvasIdle(language: InkLanguage.chinese);
   }
 
-  /// Called by the canvas widget with its current size. Strokes are measured
-  /// in that size, so a different size (rotation, split screen) clears them.
+  /// Strokes are measured in this size, so a different size (rotation, split
+  /// screen) clears them.
   void updateWritingArea(WritingArea area) {
     final previous = _writingArea;
     _writingArea = area;
@@ -76,8 +76,6 @@ class CanvasController extends Notifier<CanvasState> {
     _reset(const [], state.language);
   }
 
-  /// Switching language clears the strokes, since they were drawn for the
-  /// other language.
   void selectLanguage(InkLanguage language) {
     if (_locked || language == state.language) return;
     _reset(const [], language);

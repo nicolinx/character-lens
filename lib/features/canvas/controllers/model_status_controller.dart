@@ -6,7 +6,6 @@ import 'package:character_lens/domain/failures/ink_failure.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 
-/// Status per language. A language with no entry has not been checked yet.
 typedef ModelStatuses = Map<InkLanguage, ModelStatus>;
 
 final modelStatusControllerProvider =
@@ -14,7 +13,6 @@ final modelStatusControllerProvider =
       ModelStatusController.new,
     );
 
-/// The selected language's model status, or null while it is being checked.
 final selectedModelStatusProvider = Provider<ModelStatus?>((ref) {
   final language = ref.watch(
     canvasControllerProvider.select((s) => s.language),
@@ -22,7 +20,6 @@ final selectedModelStatusProvider = Provider<ModelStatus?>((ref) {
   return ref.watch(modelStatusControllerProvider)[language];
 });
 
-/// Drawing needs the selected language's model on the device.
 final drawingEnabledProvider = Provider<bool>(
   (ref) => ref.watch(selectedModelStatusProvider) is ModelReady,
 );
@@ -41,7 +38,6 @@ class ModelStatusController extends Notifier<ModelStatuses> {
     return const {};
   }
 
-  /// Asks the recognizer whether the model is on the device. Never downloads.
   Future<void> refresh(InkLanguage language) async {
     if (state[language] is ModelDownloading) return;
 
@@ -56,7 +52,6 @@ class ModelStatusController extends Notifier<ModelStatuses> {
     _set(language, checked);
   }
 
-  /// Downloads the model. Also the retry: it is allowed from a failed state.
   Future<void> download(InkLanguage language) async {
     final current = state[language];
     if (current is ModelDownloading || current is ModelReady) return;

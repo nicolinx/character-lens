@@ -84,7 +84,6 @@ class _Harness {
 
   CanvasState get state => container.read(canvasControllerProvider);
 
-  /// Types of the states seen, without consecutive repeats.
   List<Type> get trail {
     final types = <Type>[];
     for (final s in states) {
@@ -95,7 +94,6 @@ class _Harness {
     return types;
   }
 
-  /// One finished stroke of two points.
   void drawStroke(double x) {
     controller
       ..startStroke(_pt(x))

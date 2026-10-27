@@ -7,16 +7,11 @@ import 'package:character_lens/domain/entities/character_entry.dart';
 import 'package:character_lens/domain/failures/dictionary_failure.dart';
 import 'package:character_lens/domain/repositories/dictionary.dart';
 
-/// Reads the bundled asset. In the app this is `rootBundle`; tests pass bytes.
 typedef AssetLoader = Future<Uint8List> Function();
 
-/// The dictionary built by `tool/build_dictionary.dart`, read with sqflite.
-///
-/// On first use the bundled database is copied to the databases folder, and
-/// copied again whenever the installed file differs from the bundled one, so
-/// an app update that ships a new dictionary replaces the old one. The copy is
-/// opened read-only. Every failure to open or read it is a
-/// [DictionaryUnavailableFailure]; a character that is not in it is null.
+/// The bundled Unihan database, copied to the databases folder on first use and
+/// again whenever the installed file differs from the bundled one. Opened
+/// read-only.
 class SqliteDictionary implements Dictionary {
   SqliteDictionary({
     required this._databaseFactory,
@@ -53,7 +48,6 @@ class SqliteDictionary implements Dictionary {
     return rows.isNotEmpty;
   }
 
-  /// Closes the database. A later call opens it again.
   Future<void> close() async {
     final opening = _opening;
     _opening = null;
@@ -77,8 +71,7 @@ class SqliteDictionary implements Dictionary {
     }
   }
 
-  /// One open shared by every caller. A failed open is not kept, so the next
-  /// call tries again.
+  /// A failed open is not kept, so the next call tries again.
   Future<Database> _database() async {
     final opening = _opening ??= _open();
     try {
@@ -141,7 +134,6 @@ class SqliteDictionary implements Dictionary {
     return true;
   }
 
-  /// The code point of [character], or null when it is not exactly one.
   int? _codepointOf(String character) {
     final runes = character.runes;
     return runes.length == 1 ? runes.first : null;

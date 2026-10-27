@@ -5,8 +5,6 @@ import 'package:character_lens/domain/entities/ink_language.dart';
 import 'package:character_lens/domain/entities/stroke.dart';
 import 'package:character_lens/domain/failures/ink_failure.dart';
 
-/// Strokes and language are part of every state, so a result can never be
-/// shown for strokes other than the ones it was recognized from.
 sealed class CanvasState extends Equatable {
   CanvasState({required List<Stroke> strokes, required this.language})
     : strokes = List.unmodifiable(strokes);
@@ -15,7 +13,6 @@ sealed class CanvasState extends Equatable {
   final InkLanguage language;
 }
 
-/// Nothing recognized yet. Also the state while the user is drawing.
 class CanvasIdle extends CanvasState {
   CanvasIdle({super.strokes = const [], required super.language});
 

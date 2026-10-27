@@ -26,7 +26,6 @@ class _Screen {
 
   CanvasState get state => container.read(canvasControllerProvider);
 
-  /// One short stroke, then the 600 ms pause that starts recognition.
   Future<void> draw({bool pause = true}) async {
     final origin = tester.getTopLeft(find.byType(WritingPad));
     final gesture = await tester.startGesture(origin + const Offset(60, 60));
@@ -348,7 +347,6 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('Pick the match'), findsOneWidget);
     expect(find.byTooltip('Undo last stroke'), findsOneWidget);
-    // With a result, the main button is Look up, not Analyze.
     expect(find.widgetWithText(FilledButton, 'Look up 木'), findsOneWidget);
   });
 }

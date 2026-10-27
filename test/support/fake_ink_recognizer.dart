@@ -7,12 +7,9 @@ import 'package:character_lens/domain/entities/stroke.dart';
 import 'package:character_lens/domain/entities/writing_area.dart';
 import 'package:character_lens/domain/repositories/ink_recognizer.dart';
 
-/// Answers from memory, so no test touches the network or the plugin.
 class FakeInkRecognizer implements InkRecognizer {
-  /// Status per language. A language not listed is not downloaded.
   final statuses = <InkLanguage, ModelStatus>{};
 
-  /// What a download ends with.
   ModelStatus downloadResult = const ModelReady();
   Object? checkError;
   Object? downloadError;
@@ -26,14 +23,12 @@ class FakeInkRecognizer implements InkRecognizer {
   final checked = <InkLanguage>[];
   final downloaded = <InkLanguage>[];
 
-  /// What recognition answers with, unless [recognizeError] is set.
   List<Candidate> candidates = const [Candidate(character: '木')];
   Object? recognizeError;
 
   /// When set, recognition waits for it, which keeps the state Recognizing.
   Completer<void>? recognizeGate;
 
-  /// The writing area of each recognition request.
   final areas = <WritingArea>[];
 
   @override

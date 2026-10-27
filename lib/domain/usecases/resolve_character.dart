@@ -3,8 +3,6 @@ import 'package:character_lens/domain/entities/character_view.dart';
 import 'package:character_lens/domain/entities/han_language.dart';
 import 'package:character_lens/domain/repositories/dictionary.dart';
 
-/// Turns an entry into what the sheet shows for each language.
-///
 /// Variants are followed one hop only, and only to fill a gap: a language gets
 /// readings from a variant only when the drawn character has none for it.
 /// Unihan does not link every pair of forms (for example 気 has no link to 氣),

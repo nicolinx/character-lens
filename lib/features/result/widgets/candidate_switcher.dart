@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
 
-/// "Not it?": the other matches, so a wrong pick is one tap from the right one.
-/// Hidden when there is nothing to switch to.
 class CandidateSwitcher extends StatelessWidget {
   const CandidateSwitcher({
     super.key,

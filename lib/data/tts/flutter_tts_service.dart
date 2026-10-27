@@ -3,13 +3,11 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:character_lens/domain/entities/han_language.dart';
 import 'package:character_lens/domain/repositories/tts_service.dart';
 
-/// Speaks with the voices of the device, through `flutter_tts`.
 class FlutterTtsService implements TtsService {
   FlutterTtsService(this._tts);
 
   final FlutterTts _tts;
 
-  /// Android and iOS both take these language tags.
   static String tagOf(HanLanguage language) => switch (language) {
     HanLanguage.chinese => 'zh-CN',
     HanLanguage.japanese => 'ja-JP',
@@ -42,7 +40,7 @@ class FlutterTtsService implements TtsService {
     try {
       await _tts.stop();
     } on Exception {
-      // Nothing is speaking, or the engine is gone. Either way it is quiet.
+      // Nothing is speaking, or the engine is gone.
     }
   }
 }

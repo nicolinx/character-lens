@@ -8,9 +8,8 @@ import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/result/result_sheet.dart';
 import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
 
-/// The one main action. "Analyze" recognizes now instead of waiting for the
-/// pause, and is the way to try again after an error. Once there is a result it
-/// becomes "Look up" plus the selected character and opens the result sheet.
+/// "Analyze" until there is a result, then "Look up" plus the selected
+/// character.
 class PrimaryActionButton extends ConsumerWidget {
   const PrimaryActionButton({super.key});
 

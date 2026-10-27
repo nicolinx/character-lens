@@ -42,7 +42,6 @@ class _Harness {
 
   LookupState get state => container.read(lookupControllerProvider);
 
-  /// Types of the states seen, without consecutive repeats.
   List<Type> get trail {
     final types = <Type>[];
     for (final s in states) {

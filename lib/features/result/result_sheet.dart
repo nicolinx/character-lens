@@ -9,12 +9,6 @@ import 'package:character_lens/features/result/controllers/lookup_state.dart';
 import 'package:character_lens/features/result/controllers/speech_controller.dart';
 import 'package:character_lens/features/result/widgets/result_sheet_view.dart';
 
-/// Opens the result sheet for [character] and closes the lookup when the sheet
-/// goes away, however it was dismissed.
-///
-/// [candidates] and [onSwitched] come from the caller, so this feature does not
-/// depend on the canvas: "Not it?" lists the candidates and reports the one the
-/// user picked.
 Future<void> showResultSheet(
   BuildContext context,
   WidgetRef ref, {

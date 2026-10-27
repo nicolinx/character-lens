@@ -11,8 +11,6 @@ import 'package:character_lens/features/result/widgets/candidate_switcher.dart';
 import 'package:character_lens/features/result/widgets/dictionary_card.dart';
 import 'package:character_lens/features/result/widgets/result_header.dart';
 
-/// What the result sheet shows for a lookup state. It holds no state of its
-/// own: the connected sheet passes the state and the callbacks.
 class ResultSheetView extends StatelessWidget {
   const ResultSheetView({
     super.key,
@@ -27,13 +25,11 @@ class ResultSheetView extends StatelessWidget {
 
   final LookupOpen state;
 
-  /// The matches from the canvas, best first, for "Not it?".
   final List<String> candidates;
   final ValueChanged<String> onCandidate;
   final VoidCallback onRetry;
   final VoidCallback onClose;
 
-  /// What the speaker button is doing, and what a tap on it asks for.
   final SpeechState speech;
   final ValueChanged<String> onSpeak;
 
@@ -127,7 +123,6 @@ class ResultSheetView extends StatelessWidget {
   }
 }
 
-/// Why nothing was heard, or null when there is nothing to say.
 @visibleForTesting
 String? speechMessage(SpeechState speech) => switch (speech) {
   SpeechNoVoice() => 'No voice installed for this language',
