@@ -1,0 +1,16 @@
+# Unihan_Variants.txt
+# Date: 2026-07-31 00:00:00 GMT [KL]
+# Unicode Version 18.0.0
+#
+# Unicode Character Database
+# © 2026 Unicode®, Inc.
+# Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
+# For terms of use and license, see https://www.unicode.org/terms_of_use.html
+#
+U+5B66	kTraditionalVariant	U+5B78
+U+5B78	kSimplifiedVariant	U+5B66
+U+6C14	kSimplifiedVariant	U+6C14
+U+6C14	kTraditionalVariant	U+6C14 U+6C23
+U+6C23	kSimplifiedVariant	U+6C14
+U+8A9E	kSimplifiedVariant	U+8BED
+U+8BED	kTraditionalVariant	U+8A9E

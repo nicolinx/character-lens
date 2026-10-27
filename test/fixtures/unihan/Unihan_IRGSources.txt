@@ -1,0 +1,20 @@
+# Unihan_IRGSources.txt
+# Date: 2026-07-31 00:00:00 GMT [KL]
+# Unicode Version 18.0.0
+#
+# Unicode Character Database
+# © 2026 Unicode®, Inc.
+# Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
+# For terms of use and license, see https://www.unicode.org/terms_of_use.html
+#
+U+4E02	kTotalStrokes	2
+U+5B66	kTotalStrokes	8
+U+5B78	kTotalStrokes	16
+U+6728	kTotalStrokes	4
+U+6C14	kTotalStrokes	4
+U+6C17	kTotalStrokes	6
+U+6C23	kTotalStrokes	10
+U+8A9E	kTotalStrokes	14
+U+8BED	kTotalStrokes	9
+U+20000	kTotalStrokes	2
+U+20002	kTotalStrokes	2

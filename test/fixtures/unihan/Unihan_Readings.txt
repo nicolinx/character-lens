@@ -1,0 +1,59 @@
+# Unihan_Readings.txt
+# Date: 2026-07-31 00:00:00 GMT [KL]
+# Unicode Version 18.0.0
+#
+# Unicode Character Database
+# © 2026 Unicode®, Inc.
+# Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
+# For terms of use and license, see https://www.unicode.org/terms_of_use.html
+#
+U+4E02	kDefinition	obstruction of breath (qi) as it seeks release; variant of other characters
+U+4E02	kJapanese	コウ
+U+4E02	kJapaneseKun	SAMATAGERARERU
+U+4E02	kJapaneseOn	KOU
+U+4E02	kMandarin	kǎo
+U+5B66	kDefinition	learning, knowledge; school
+U+5B66	kHangul	학:N
+U+5B66	kJapanese	ガク カク コウ キョウ まなぶ おしえる
+U+5B66	kJapaneseKun	MANABU
+U+5B66	kJapaneseOn	GAKU
+U+5B66	kMandarin	xué
+U+5B78	kDefinition	learning, knowledge; school
+U+5B78	kHangul	학:0E
+U+5B78	kJapanese	ガク カク コウ キョウ まなぶ
+U+5B78	kJapaneseKun	MANABU
+U+5B78	kJapaneseOn	GAKU
+U+5B78	kMandarin	xué
+U+6728	kDefinition	tree; wood, lumber; wooden
+U+6728	kHangul	목:0E
+U+6728	kJapanese	ボク モク き こ
+U+6728	kJapaneseKun	KI
+U+6728	kJapaneseOn	BOKU MOKU
+U+6728	kMandarin	mù
+U+6C14	kDefinition	steam, vapor; Kangxi radical 84
+U+6C14	kJapanese	キ ケ キツ コチ きがまえ
+U+6C14	kJapaneseKun	IKI
+U+6C14	kJapaneseOn	KI KE
+U+6C14	kMandarin	qì
+U+6C17	kDefinition	air, gas, steam, vapor; spirit
+U+6C17	kJapanese	キ ケ き
+U+6C17	kJapaneseKun	IKI
+U+6C17	kJapaneseOn	KI KE
+U+6C17	kMandarin	qì
+U+6C23	kDefinition	air, gas, steam, vapor; spirit
+U+6C23	kHangul	기:0E
+U+6C23	kJapanese	キ ケ
+U+6C23	kJapaneseKun	IKI
+U+6C23	kJapaneseOn	KI KE
+U+6C23	kMandarin	qì
+U+8A9E	kDefinition	language, words; saying, expression
+U+8A9E	kHangul	어:0E
+U+8A9E	kJapanese	ゴ ギョ かたる かたらう ことば つげる
+U+8A9E	kJapaneseKun	KATARU KOTOBA TSUGERU
+U+8A9E	kJapaneseOn	GO GYO
+U+8A9E	kMandarin	yǔ
+U+8BED	kDefinition	language, words; saying, expression
+U+8BED	kMandarin	yǔ
+U+20000	kDefinition	the sound made by breathing in; oh! (see ㄛ BOPOMOFO LETTER O)
+U+20000	kJapanese	カ
+U+20000	kMandarin	hē
