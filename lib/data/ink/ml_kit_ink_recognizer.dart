@@ -16,8 +16,6 @@ class MlKitInkRecognizer implements InkRecognizer {
   }) : _modelManager = modelManager ?? PluginInkModelManager(),
        _recognizerFactory = recognizerFactory ?? PluginInkTextRecognizer.new;
 
-  static const maxCandidates = 5;
-
   final InkModelManager _modelManager;
   final InkTextRecognizerFactory _recognizerFactory;
   final StrokeMapper _mapper;
@@ -65,7 +63,7 @@ class MlKitInkRecognizer implements InkRecognizer {
         ink,
         writingArea: writingArea,
       );
-      return candidates.take(maxCandidates).toList();
+      return candidates;
     } on Exception catch (e) {
       throw await _failureFor(language, e);
     }

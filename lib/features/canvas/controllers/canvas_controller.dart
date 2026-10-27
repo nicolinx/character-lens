@@ -8,7 +8,7 @@ import '../../../domain/entities/stroke_point.dart';
 import '../../../domain/entities/writing_area.dart';
 import '../../../domain/failures/ink_failure.dart';
 import 'canvas_state.dart';
-import 'ink_recognizer_provider.dart';
+import 'recognize_characters_provider.dart';
 
 final canvasControllerProvider =
     NotifierProvider<CanvasController, CanvasState>(CanvasController.new);
@@ -101,12 +101,12 @@ class CanvasController extends Notifier<CanvasState> {
       return;
     }
 
-    final recognizer = ref.read(inkRecognizerProvider);
+    final recognizeCharacters = ref.read(recognizeCharactersProvider);
     state = CanvasRecognizing(strokes: strokes, language: language);
 
     CanvasState next;
     try {
-      final candidates = await recognizer.recognize(
+      final candidates = await recognizeCharacters(
         strokes,
         language,
         writingArea: area,

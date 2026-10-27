@@ -154,8 +154,10 @@ void main() {
   });
 
   group('recognize', () {
-    test('returns only the top 5 candidates, in order', () async {
-      engine.result = _candidates(7);
+    test('returns every candidate the engine gives, in order', () async {
+      // The engine gave up to 10 on a device. Filtering and the cap of 5 are
+      // RecognizeCharacters' job, not this class's.
+      engine.result = _candidates(10);
 
       final result = await recognizer.recognize(
         _dot,
@@ -163,10 +165,10 @@ void main() {
         writingArea: _area,
       );
 
-      expect(result, _candidates(5));
+      expect(result, _candidates(10));
     });
 
-    test('returns fewer than 5 when the recognizer gives fewer', () async {
+    test('returns few when the engine gives few', () async {
       engine.result = _candidates(2);
 
       final result = await recognizer.recognize(

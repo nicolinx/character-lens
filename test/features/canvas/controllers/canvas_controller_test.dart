@@ -6,14 +6,18 @@ import 'package:character_lens/domain/entities/model_status.dart';
 import 'package:character_lens/domain/entities/stroke.dart';
 import 'package:character_lens/domain/entities/stroke_point.dart';
 import 'package:character_lens/domain/entities/writing_area.dart';
+import 'package:character_lens/domain/failures/dictionary_failure.dart';
 import 'package:character_lens/domain/failures/ink_failure.dart';
 import 'package:character_lens/domain/repositories/ink_recognizer.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
+import 'package:character_lens/features/dictionary_provider.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../support/fake_dictionary.dart';
 
 typedef _Call = ({
   List<Stroke> strokes,
@@ -58,7 +62,10 @@ StrokePoint _pt(double x, [int t = 0]) =>
 class _Harness {
   _Harness({bool setArea = true}) {
     container = ProviderContainer(
-      overrides: [inkRecognizerProvider.overrideWithValue(recognizer)],
+      overrides: [
+        inkRecognizerProvider.overrideWithValue(recognizer),
+        dictionaryProvider.overrideWithValue(dictionary),
+      ],
     );
     container.listen(
       canvasControllerProvider,
@@ -70,6 +77,7 @@ class _Harness {
   }
 
   final recognizer = _FakeRecognizer();
+  final dictionary = FakeDictionary.bare('木本');
   final states = <CanvasState>[];
   late final ProviderContainer container;
   late final CanvasController controller;
@@ -265,6 +273,55 @@ void main() {
       expect(h.state, isA<CanvasError>());
       expect((h.state as CanvasError).failure, const NoCandidatesFailure());
       expect(h.state.strokes, hasLength(1));
+    });
+
+    _test('shows only the candidates the dictionary knows', (async, h) {
+      h.recognizer.result = const [
+        Candidate(character: '十木'),
+        Candidate(character: '木'),
+        Candidate(character: '+'),
+        Candidate(character: '本'),
+      ];
+      h.drawStroke(1);
+
+      h.controller.analyze();
+      async.flushMicrotasks();
+
+      final result = h.state as CanvasResult;
+      expect(result.candidates.map((c) => c.character), ['木', '本']);
+      expect(result.selected, const Candidate(character: '木'));
+    });
+
+    _test('turns a recognition with nothing in the dictionary into a '
+        'NoCandidates error', (async, h) {
+      h.recognizer.result = const [
+        Candidate(character: '十木'),
+        Candidate(character: 'ミ'),
+      ];
+      h.drawStroke(1);
+
+      h.controller.analyze();
+      async.flushMicrotasks();
+
+      expect((h.state as CanvasError).failure, const NoCandidatesFailure());
+      expect(h.state.strokes, hasLength(1));
+    });
+
+    _test('ends in an Error, not a crash, when the dictionary is unavailable', (
+      async,
+      h,
+    ) {
+      h.dictionary.error = const DictionaryUnavailableFailure();
+      h.drawStroke(1);
+
+      h.controller.analyze();
+      async.flushMicrotasks();
+
+      expect(h.trail, [CanvasIdle, CanvasRecognizing, CanvasError]);
+      expect(
+        (h.state as CanvasError).failure,
+        const RecognitionFailure(cause: DictionaryUnavailableFailure()),
+      );
     });
 
     _test('does nothing when there are no strokes', (async, h) {

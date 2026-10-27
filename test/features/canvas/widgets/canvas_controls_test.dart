@@ -9,10 +9,12 @@ import 'package:character_lens/features/canvas/controllers/canvas_controller.dar
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
+import 'package:character_lens/features/dictionary_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../support/fake_dictionary.dart';
 import '../../../support/fake_ink_recognizer.dart';
 
 class _Screen {
@@ -58,7 +60,10 @@ Future<_Screen> _pump(
   if (modelReady) fake.statuses[InkLanguage.chinese] = const ModelReady();
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [inkRecognizerProvider.overrideWithValue(fake)],
+      overrides: [
+        inkRecognizerProvider.overrideWithValue(fake),
+        dictionaryProvider.overrideWithValue(FakeDictionary.bare('木末本朮禾')),
+      ],
       child: MediaQuery(
         data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
         child: const CharacterLensApp(),

@@ -5,16 +5,21 @@ import 'package:character_lens/domain/entities/ink_language.dart';
 import 'package:character_lens/domain/entities/model_status.dart';
 import 'package:character_lens/domain/failures/ink_failure.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
+import 'package:character_lens/features/dictionary_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../support/fake_dictionary.dart';
 import '../../support/fake_ink_recognizer.dart';
 
 Future<void> _pump(WidgetTester tester, FakeInkRecognizer recognizer) async {
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [inkRecognizerProvider.overrideWithValue(recognizer)],
+      overrides: [
+        inkRecognizerProvider.overrideWithValue(recognizer),
+        dictionaryProvider.overrideWithValue(FakeDictionary.bare('木末本朮禾')),
+      ],
       child: const CharacterLensApp(),
     ),
   );
