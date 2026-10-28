@@ -50,6 +50,7 @@ Future<_Calls> _pump(
   double textScale = 1,
   Size size = const Size(400, 1400),
   SpeechState speech = const SpeechIdle(),
+  double bottomInset = 0,
 }) async {
   await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -60,6 +61,7 @@ Future<_Calls> _pump(
       home: MediaQuery(
         data: MediaQueryData(
           size: size,
+          padding: EdgeInsets.only(bottom: bottomInset),
           textScaler: TextScaler.linear(textScale),
         ),
         child: Scaffold(
@@ -493,6 +495,18 @@ void main() {
         speech: const SpeechSpeaking(),
       );
       expect(find.textContaining('voice'), findsNothing);
+    });
+  });
+
+  group('system navigation bar', () {
+    testWidgets('keeps the footer clear of it', (tester) async {
+      await _pump(tester, await _loaded('木', _jp), bottomInset: 48);
+
+      final scroll = tester.getRect(find.byType(SingleChildScrollView));
+      final footer = tester.getRect(
+        find.textContaining('Data: Unicode Unihan'),
+      );
+      expect(scroll.bottom - footer.bottom, greaterThanOrEqualTo(48));
     });
   });
 }

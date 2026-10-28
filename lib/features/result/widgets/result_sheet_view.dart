@@ -54,7 +54,12 @@ class ResultSheetView extends StatelessWidget {
         ),
         Flexible(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              0,
+              20,
+              28 + MediaQuery.paddingOf(context).bottom,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
