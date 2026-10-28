@@ -40,13 +40,13 @@ Two sets of measurements, both small.
 - 10 of 10 had the intended character at rank 1.
 - `zh-Hani` took 252 to 632 ms, and one call (632 ms) was over the 500 ms target. `ja` took 65 to 85 ms. I did not investigate the cause of the difference.
 
-**Acceptance pass (Step 9).** A physical Android device (model not recorded), strokes drawn with a finger, one attempt per cell, the same 10 cells, using the real app. The timer wrapped only the `recognize` call.
+**Acceptance pass (Step 9).** An Android emulator (which virtual device was not recorded), strokes drawn on its screen, one attempt per cell, the same 10 cells, using the real app. The timer wrapped only the `recognize` call.
 
 - 10 of 10 had the intended character at rank 1.
 - 34 to 144 ms, median about 55 ms. The slowest was 語 in Chinese with 15 strokes (144 ms).
 - Not recorded: the build mode (debug, profile or release), which call was first after launch, and any repeats. These figures are not end-to-end times: they leave out the 600 ms pause before recognition starts.
 
-Both runs are one attempt per cell. They show that the engine works on these characters. They are not an accuracy rate.
+Both runs are one attempt per cell. They show that the engine works on these characters. They are not an accuracy rate, and times from an emulator on a laptop CPU do not tell how fast it is on a phone.
 
 Other things I read or saw:
 
@@ -59,7 +59,7 @@ Other things I read or saw:
 - Strokes stay on the device, there is no per-call cost, and no key is needed. After the models are downloaded, recognition needs no network.
 - **The first use of each language needs a network that can reach `dl.google.com`.** Some networks cannot. The size of the models was not measured.
 - **Candidates are noisy.** Even with the right answer at rank 1, the candidates include multi-character strings (`十木`, `言語`, `、学`, `学学`), non-Han symbols (`ホ`, `ㄖ`, `1`, `+`, `t`) and, for Chinese, a simplified form (语 at rank 3 for 語). The filter described above removes strings, symbols, digits, letters and kana. It cannot remove a real but rare Han character: when a drawing looked like punctuation, characters such as 乛, 了 and 厂 were kept because they are in the dictionary.
-- **ML Kit returned up to 10 candidates.** In ten recognitions on an Android device it returned 10 candidates eight times, 7 once and 8 once, so the earlier cap of 5 was hiding the rest. Every score was `0.0`, so only the order ranks candidates. Applied to those ten recognitions, the filter left between 1 and 6 characters each. Fewer than 5 is normal, and the chip row shows however many survive. The device model and the build mode were not recorded.
+- **ML Kit returned up to 10 candidates.** In ten recognitions on an Android emulator it returned 10 candidates eight times, 7 once and 8 once, so the earlier cap of 5 was hiding the rest. Every score was `0.0`, so only the order ranks candidates. Applied to those ten recognitions, the filter left between 1 and 6 characters each. Fewer than 5 is normal, and the chip row shows however many survive. The emulator image and the build mode were not recorded.
 - The plugin is a community package that wraps Google's SDK. If it falls behind, the interface lets another implementation replace it, but I have not tried that.
 - The writing area is reported to the engine, and a change in size clears the strokes. I did not test how much the writing area size changes accuracy.
 - Only Chinese (`zh-Hani`) and Japanese (`ja`) are wired up. Korean Hanja input is out of scope for the MVP.
