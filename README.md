@@ -179,6 +179,10 @@ Unihan data is Copyright (c) 1991-2026 Unicode, Inc. and is used under the Unico
 
 Instrument Sans and Newsreader are bundled under the SIL Open Font License 1.1. The license texts are in `assets/fonts`.
 
+## How it was built
+
+I wrote the specification, the architecture and the decision records, and reviewed every change. I used Claude Code for implementation and test writing, working in small steps under the rules in [CLAUDE.md](CLAUDE.md). Each step ends with `flutter analyze` and `flutter test`, and tests are checked by breaking the code on purpose and confirming they fail.
+
 ## License
 
 The code is MIT, see [LICENSE](LICENSE). The bundled data and fonts keep their own licenses, listed above.
