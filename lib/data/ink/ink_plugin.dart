@@ -1,11 +1,11 @@
 import 'package:google_mlkit_digital_ink_recognition/google_mlkit_digital_ink_recognition.dart'
     as mlkit;
 
-import '../../domain/entities/candidate.dart';
-import '../../domain/entities/writing_area.dart';
+import 'package:character_lens/domain/entities/candidate.dart';
+import 'package:character_lens/domain/entities/writing_area.dart';
 
-/// Thin seams over the ML Kit plugin, so [MlKitInkRecognizer] can be tested
-/// with fakes. Implementations may throw any [Exception] from the plugin.
+/// Thin seams over the ML Kit plugin, so the recognizer can be tested with
+/// fakes.
 abstract interface class InkModelManager {
   Future<bool> isModelDownloaded(String languageTag);
 

@@ -4,6 +4,5 @@ enum InkLanguage {
 
   const InkLanguage(this.languageTag);
 
-  /// ML Kit Digital Ink model identifier for this language.
   final String languageTag;
 }

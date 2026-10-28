@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
-import '../../../domain/entities/ink_language.dart';
-import '../../../domain/entities/model_status.dart';
-import '../controllers/canvas_controller.dart';
-import '../ink_language_labels.dart';
-import '../controllers/model_status_controller.dart';
-import 'model_status_line.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
+import 'package:character_lens/core/theme/app_text.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/entities/model_status.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
+import 'package:character_lens/features/canvas/ink_language_labels.dart';
+import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
+import 'package:character_lens/features/canvas/widgets/model_status_line.dart';
 
-/// CN / JP tabs. The dot on each tab shows that language's model state.
 class LanguageSelector extends ConsumerWidget {
   const LanguageSelector({super.key});
 

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
-import '../controllers/canvas_controller.dart';
-import '../controllers/canvas_state.dart';
-import '../controllers/model_status_controller.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
+import 'package:character_lens/core/theme/app_text.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
+import 'package:character_lens/features/result/result_sheet.dart';
+import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
 
-/// Recognizes now instead of waiting for the pause. Also the way to try again
-/// after an error.
-class AnalyzeButton extends ConsumerWidget {
-  const AnalyzeButton({super.key});
+/// "Analyze" until there is a result, then "Look up" plus the selected
+/// character.
+class PrimaryActionButton extends ConsumerWidget {
+  const PrimaryActionButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,13 +19,31 @@ class AnalyzeButton extends ConsumerWidget {
     final drawingEnabled = ref.watch(drawingEnabledProvider);
     final busy = state is CanvasRecognizing;
     final canAnalyze = drawingEnabled && !busy && state.strokes.isNotEmpty;
+    final controller = ref.read(canvasControllerProvider.notifier);
+
+    final VoidCallback? onPressed;
+    final String label;
+    if (state case CanvasResult(:final selected, :final language)) {
+      label = 'Look up ${selected.character}';
+      onPressed = () => showResultSheet(
+        context,
+        ref,
+        character: selected.character,
+        language: language,
+        candidates: [for (final c in state.candidates) c.character],
+        onSwitched: (character) => controller.selectCandidate(
+          state.candidates.indexWhere((c) => c.character == character),
+        ),
+      );
+    } else {
+      label = busy ? 'Recognizing…' : 'Analyze';
+      onPressed = canAnalyze ? controller.analyze : null;
+    }
 
     return SizedBox(
       width: double.infinity,
       child: FilledButton(
-        onPressed: canAnalyze
-            ? ref.read(canvasControllerProvider.notifier).analyze
-            : null,
+        onPressed: onPressed,
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(54),
           backgroundColor: AppColors.seal,
@@ -47,7 +66,7 @@ class AnalyzeButton extends ConsumerWidget {
               const SizedBox(width: 10),
             ],
             Text(
-              busy ? 'Recognizing…' : 'Analyze',
+              label,
               style: AppText.sans(
                 size: 16,
                 weight: 600,

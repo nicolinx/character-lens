@@ -1,12 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-import '../entities/ink_language.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
 
 sealed class InkFailure extends Equatable implements Exception {
   const InkFailure();
 }
 
-/// Recognition was requested before the language model was on the device.
 class ModelNotDownloadedFailure extends InkFailure {
   const ModelNotDownloadedFailure(this.language);
 
@@ -26,7 +25,6 @@ class ModelDownloadFailure extends InkFailure {
   List<Object?> get props => [language, cause];
 }
 
-/// The recognizer ran but produced no candidates.
 class NoCandidatesFailure extends InkFailure {
   const NoCandidatesFailure();
 
@@ -34,7 +32,6 @@ class NoCandidatesFailure extends InkFailure {
   List<Object?> get props => [];
 }
 
-/// The recognizer itself failed, for any reason not covered above.
 class RecognitionFailure extends InkFailure {
   const RecognitionFailure({this.cause});
 

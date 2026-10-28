@@ -6,10 +6,12 @@ import 'package:character_lens/features/canvas/controllers/canvas_controller.dar
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
+import 'package:character_lens/features/dictionary_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../support/fake_dictionary.dart';
 import '../../../support/fake_ink_recognizer.dart';
 
 class _Pad {
@@ -39,7 +41,10 @@ Future<_Pad> _pump(
   }
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [inkRecognizerProvider.overrideWithValue(recognizer)],
+      overrides: [
+        inkRecognizerProvider.overrideWithValue(recognizer),
+        dictionaryProvider.overrideWithValue(FakeDictionary.bare('木末本朮禾')),
+      ],
       child: const CharacterLensApp(),
     ),
   );

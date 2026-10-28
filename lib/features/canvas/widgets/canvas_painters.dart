@@ -1,10 +1,8 @@
 import 'package:flutter/rendering.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../domain/entities/stroke.dart';
+import 'package:character_lens/core/theme/app_colors.dart';
+import 'package:character_lens/domain/entities/stroke.dart';
 
-/// The ruled practice sheet: an inner ring, a cross and two diagonals.
-/// It never changes, so it sits on its own layer and is painted once per size.
 class PracticeSheetPainter extends CustomPainter {
   const PracticeSheetPainter();
 
@@ -47,8 +45,6 @@ class PracticeSheetPainter extends CustomPainter {
   bool shouldRepaint(PracticeSheetPainter oldDelegate) => false;
 }
 
-/// Draws the strokes with ink. Each stroke is smoothed through the midpoints
-/// of its points, like the prototype's canvas.
 class StrokePainter extends CustomPainter {
   const StrokePainter(this.strokes);
 
@@ -71,7 +67,6 @@ class StrokePainter extends CustomPainter {
     }
   }
 
-  /// Null for a stroke with no points.
   static Path? pathFor(Stroke stroke) {
     final p = stroke.points;
     if (p.isEmpty) return null;

@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../domain/entities/ink_language.dart';
-import '../../../domain/entities/stroke.dart';
-import '../../../domain/entities/stroke_point.dart';
-import '../../../domain/entities/writing_area.dart';
-import '../../../domain/failures/ink_failure.dart';
-import 'canvas_state.dart';
-import 'ink_recognizer_provider.dart';
+import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/entities/stroke.dart';
+import 'package:character_lens/domain/entities/stroke_point.dart';
+import 'package:character_lens/domain/entities/writing_area.dart';
+import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
+import 'package:character_lens/features/canvas/controllers/recognize_characters_provider.dart';
 
 final canvasControllerProvider =
     NotifierProvider<CanvasController, CanvasState>(CanvasController.new);
@@ -26,8 +26,8 @@ class CanvasController extends Notifier<CanvasState> {
     return CanvasIdle(language: InkLanguage.chinese);
   }
 
-  /// Called by the canvas widget with its current size. Strokes are measured
-  /// in that size, so a different size (rotation, split screen) clears them.
+  /// Strokes are measured in this size, so a different size (rotation, split
+  /// screen) clears them.
   void updateWritingArea(WritingArea area) {
     final previous = _writingArea;
     _writingArea = area;
@@ -76,8 +76,6 @@ class CanvasController extends Notifier<CanvasState> {
     _reset(const [], state.language);
   }
 
-  /// Switching language clears the strokes, since they were drawn for the
-  /// other language.
   void selectLanguage(InkLanguage language) {
     if (_locked || language == state.language) return;
     _reset(const [], language);
@@ -101,12 +99,12 @@ class CanvasController extends Notifier<CanvasState> {
       return;
     }
 
-    final recognizer = ref.read(inkRecognizerProvider);
+    final recognizeCharacters = ref.read(recognizeCharactersProvider);
     state = CanvasRecognizing(strokes: strokes, language: language);
 
     CanvasState next;
     try {
-      final candidates = await recognizer.recognize(
+      final candidates = await recognizeCharacters(
         strokes,
         language,
         writingArea: area,
