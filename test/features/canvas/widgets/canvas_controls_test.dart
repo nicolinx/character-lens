@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:character_lens/app.dart';
 import 'package:character_lens/domain/entities/candidate.dart';
 import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/failures/dictionary_failure.dart';
 import 'package:character_lens/domain/entities/model_status.dart';
 import 'package:character_lens/domain/failures/ink_failure.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
@@ -51,6 +52,7 @@ Future<_Screen> _pump(
   FakeInkRecognizer? recognizer,
   double textScale = 1,
   bool modelReady = true,
+  FakeDictionary? dictionary,
 }) async {
   // Tall enough that the controls under the pad are on screen.
   await tester.binding.setSurfaceSize(const Size(400, 1000));
@@ -61,7 +63,9 @@ Future<_Screen> _pump(
     ProviderScope(
       overrides: [
         inkRecognizerProvider.overrideWithValue(fake),
-        dictionaryProvider.overrideWithValue(FakeDictionary.bare('木末本朮禾')),
+        dictionaryProvider.overrideWithValue(
+          dictionary ?? FakeDictionary.bare('木末本朮禾'),
+        ),
       ],
       child: MediaQuery(
         data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
@@ -151,6 +155,36 @@ void main() {
 
       expect(s.state, isA<CanvasError>());
       expect(find.text('Recognition failed. Try again'), findsOneWidget);
+    });
+
+    testWidgets('a dictionary that cannot be opened is a readable error', (
+      tester,
+    ) async {
+      final dictionary = FakeDictionary.bare('木')
+        ..error = const DictionaryUnavailableFailure();
+      final s = await _pump(tester, dictionary: dictionary);
+
+      await s.draw();
+
+      expect(s.state, isA<CanvasError>());
+      expect(
+        find.text('The dictionary could not be opened. Try again'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('trying again works once the dictionary opens', (tester) async {
+      final dictionary = FakeDictionary.bare('木')
+        ..error = const DictionaryUnavailableFailure();
+      final s = await _pump(tester, dictionary: dictionary);
+      await s.draw();
+
+      dictionary.error = null;
+      await tester.tap(_analyze);
+      await tester.pump();
+      await tester.pump();
+
+      expect(s.state, isA<CanvasResult>());
     });
 
     testWidgets('a missing model reported by the recognizer is readable', (

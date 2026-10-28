@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
+import 'package:character_lens/domain/failures/dictionary_failure.dart';
 import 'package:character_lens/domain/failures/ink_failure.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
@@ -23,6 +24,8 @@ String describeCanvasStatus(CanvasState state, {required bool drawingEnabled}) {
         'Download the ${language.name} model first',
       ModelDownloadFailure() => 'Model download failed',
       NoCandidatesFailure() => 'No match. Try writing it larger',
+      RecognitionFailure(cause: DictionaryFailure()) =>
+        'The dictionary could not be opened. Try again',
       RecognitionFailure() => 'Recognition failed. Try again',
     },
   };
