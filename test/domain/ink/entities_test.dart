@@ -1,9 +1,9 @@
-import 'package:character_lens/domain/entities/candidate.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/model_status.dart';
-import 'package:character_lens/domain/entities/stroke.dart';
-import 'package:character_lens/domain/entities/stroke_point.dart';
-import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/domain/ink/candidate.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/model_status.dart';
+import 'package:character_lens/domain/ink/stroke.dart';
+import 'package:character_lens/domain/ink/stroke_point.dart';
+import 'package:character_lens/domain/ink/ink_failure.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

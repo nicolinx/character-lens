@@ -1,4 +1,4 @@
-import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
 
 /// Input is Chinese or Japanese ([InkLanguage]); Korean (Hanja) only appears in
 /// the output.

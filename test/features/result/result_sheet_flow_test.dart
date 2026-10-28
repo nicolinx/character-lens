@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:character_lens/app.dart';
-import 'package:character_lens/domain/entities/candidate.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/model_status.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
+import 'package:character_lens/domain/ink/candidate.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/model_status.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
@@ -15,8 +15,8 @@ import 'package:character_lens/features/result/controllers/lookup_state.dart';
 import 'package:character_lens/features/result/controllers/speech_controller.dart';
 import 'package:character_lens/features/result/controllers/speech_state.dart';
 import 'package:character_lens/features/result/controllers/tts_service_provider.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
-import 'package:character_lens/domain/repositories/tts_service.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/tts/tts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

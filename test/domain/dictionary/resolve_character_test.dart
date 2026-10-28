@@ -1,7 +1,7 @@
-import 'package:character_lens/domain/entities/character_view.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
-import 'package:character_lens/domain/usecases/resolve_character.dart';
+import 'package:character_lens/domain/dictionary/character_view.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
+import 'package:character_lens/domain/dictionary/resolve_character.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_dictionary.dart';

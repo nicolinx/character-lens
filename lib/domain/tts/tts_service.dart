@@ -1,4 +1,4 @@
-import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
 
 enum SpeakResult {
   spoken,

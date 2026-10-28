@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:character_lens/domain/entities/character_entry.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/dictionary/character_entry.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
 
 class LanguageReading extends Equatable {
   const LanguageReading({

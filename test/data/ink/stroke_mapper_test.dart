@@ -1,6 +1,6 @@
 import 'package:character_lens/data/ink/stroke_mapper.dart';
-import 'package:character_lens/domain/entities/stroke.dart';
-import 'package:character_lens/domain/entities/stroke_point.dart';
+import 'package:character_lens/domain/ink/stroke.dart';
+import 'package:character_lens/domain/ink/stroke_point.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mlkit_digital_ink_recognition/google_mlkit_digital_ink_recognition.dart'
     as mlkit;

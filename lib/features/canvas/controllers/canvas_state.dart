@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:character_lens/domain/entities/candidate.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/stroke.dart';
-import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/domain/ink/candidate.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/stroke.dart';
+import 'package:character_lens/domain/ink/ink_failure.dart';
 
 sealed class CanvasState extends Equatable {
   CanvasState({required List<Stroke> strokes, required this.language})

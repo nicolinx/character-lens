@@ -3,9 +3,9 @@ import 'dart:typed_data';
 
 import 'package:sqflite/sqlite_api.dart';
 
-import 'package:character_lens/domain/entities/character_entry.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
-import 'package:character_lens/domain/repositories/dictionary.dart';
+import 'package:character_lens/domain/dictionary/character_entry.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
+import 'package:character_lens/domain/dictionary/dictionary.dart';
 
 typedef AssetLoader = Future<Uint8List> Function();
 

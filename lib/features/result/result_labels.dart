@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:character_lens/domain/entities/character_view.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/dictionary/character_view.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
 
 extension HanLanguageLabels on HanLanguage {
   String get code => switch (this) {

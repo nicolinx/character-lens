@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:character_lens/data/dictionary/sqlite_dictionary.dart';
-import 'package:character_lens/domain/entities/character_entry.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
+import 'package:character_lens/domain/dictionary/character_entry.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 

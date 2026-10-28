@@ -1,5 +1,5 @@
-import 'package:character_lens/domain/entities/character_view.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/dictionary/character_view.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
 import 'package:character_lens/features/result/result_labels.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';

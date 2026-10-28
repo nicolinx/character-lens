@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/domain/ink/ink_failure.dart';
 
 sealed class ModelStatus extends Equatable {
   const ModelStatus();

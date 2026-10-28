@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
 
 extension InkLanguageLabels on InkLanguage {
   String get name => switch (this) {

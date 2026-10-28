@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';
 import 'package:character_lens/features/result/controllers/speech_state.dart';
 import 'package:character_lens/features/result/result_labels.dart';

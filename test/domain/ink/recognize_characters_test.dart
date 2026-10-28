@@ -1,9 +1,9 @@
-import 'package:character_lens/domain/entities/candidate.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/writing_area.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
-import 'package:character_lens/domain/failures/ink_failure.dart';
-import 'package:character_lens/domain/usecases/recognize_characters.dart';
+import 'package:character_lens/domain/ink/candidate.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/writing_area.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
+import 'package:character_lens/domain/ink/ink_failure.dart';
+import 'package:character_lens/domain/ink/recognize_characters.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_dictionary.dart';

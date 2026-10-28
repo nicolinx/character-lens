@@ -51,7 +51,7 @@ validator or the evals.
 ```
 lib/
   features/   canvas/ result/ history/     (presentation)
-  domain/     entities, repository interfaces, use cases
+  domain/     ink/ dictionary/ explainer/ tts/  (entities, failures, interfaces, use cases)
   data/       ink/ dictionary/ ai/ cache/ tts/
 ```
 

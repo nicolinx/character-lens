@@ -1,6 +1,6 @@
-import 'package:character_lens/domain/entities/character_entry.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/dictionary/character_entry.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

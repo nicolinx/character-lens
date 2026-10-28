@@ -1,7 +1,7 @@
-import 'package:character_lens/domain/entities/character_entry.dart';
-import 'package:character_lens/domain/entities/character_view.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
-import 'package:character_lens/domain/repositories/dictionary.dart';
+import 'package:character_lens/domain/dictionary/character_entry.dart';
+import 'package:character_lens/domain/dictionary/character_view.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/dictionary/dictionary.dart';
 
 /// Variants are followed one hop only, and only to fill a gap: a language gets
 /// readings from a variant only when the drawn character has none for it.

@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:character_lens/app.dart';
-import 'package:character_lens/domain/entities/candidate.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
-import 'package:character_lens/domain/entities/model_status.dart';
-import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/domain/ink/candidate.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
+import 'package:character_lens/domain/ink/model_status.dart';
+import 'package:character_lens/domain/ink/ink_failure.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';

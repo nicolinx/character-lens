@@ -1,7 +1,7 @@
 import 'package:flutter/rendering.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
-import 'package:character_lens/domain/entities/stroke.dart';
+import 'package:character_lens/domain/ink/stroke.dart';
 
 class PracticeSheetPainter extends CustomPainter {
   const PracticeSheetPainter();

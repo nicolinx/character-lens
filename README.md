@@ -107,7 +107,7 @@ Decision records: [ADR 001](docs/adr/001-ml-kit-digital-ink.md) for recognition,
 ```
 lib/
   features/   canvas, result       screens, widgets, Riverpod controllers
-  domain/     entities, failures, repository interfaces, use cases
+  domain/     ink, dictionary, tts  entities, failures, interfaces, use cases
   data/       ink, dictionary, tts  implementations of the interfaces
   core/       theme
 tool/         builds the dictionary from Unihan

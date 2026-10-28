@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:character_lens/domain/entities/character_entry.dart';
-import 'package:character_lens/domain/repositories/dictionary.dart';
+import 'package:character_lens/domain/dictionary/character_entry.dart';
+import 'package:character_lens/domain/dictionary/dictionary.dart';
 
 class FakeDictionary implements Dictionary {
   FakeDictionary(Iterable<CharacterEntry> entries)

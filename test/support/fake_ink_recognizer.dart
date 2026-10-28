@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:character_lens/domain/entities/candidate.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/model_status.dart';
-import 'package:character_lens/domain/entities/stroke.dart';
-import 'package:character_lens/domain/entities/writing_area.dart';
-import 'package:character_lens/domain/repositories/ink_recognizer.dart';
+import 'package:character_lens/domain/ink/candidate.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/model_status.dart';
+import 'package:character_lens/domain/ink/stroke.dart';
+import 'package:character_lens/domain/ink/writing_area.dart';
+import 'package:character_lens/domain/ink/ink_recognizer.dart';
 
 class FakeInkRecognizer implements InkRecognizer {
   final statuses = <InkLanguage, ModelStatus>{};
