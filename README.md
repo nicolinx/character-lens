@@ -133,6 +133,8 @@ flutter test
 
 iOS has not been built or run. The Android checks so far were on an emulator.
 
+The AI explanation, once it is in the app, needs Firebase settings. They are optional and kept out of the repo: see [docs/firebase-setup.md](docs/firebase-setup.md). Without them the app runs as before.
+
 ## Tests
 
 339 tests: domain rules, the dictionary builder, SQLite access, the ML Kit adapter with fakes, controllers with `fake_async`, and widget tests that drive the real screen, including 1.5x text scale on a narrow screen.
