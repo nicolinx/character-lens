@@ -100,7 +100,7 @@ flowchart TB
 - **State** is a sealed class per concern: `CanvasState`, `LookupState` and `SpeechState`. The result sheet has its own state so closing it leaves the strokes and candidates as they were. See [ADR 004](docs/adr/004-riverpod-sealed-states.md).
 - **Failures** are typed (`InkFailure`, `DictionaryFailure`), and each one ends in a message the user can read.
 
-Decision records: [ADR 001](docs/adr/001-ml-kit-digital-ink.md) for recognition and [ADR 004](docs/adr/004-riverpod-sealed-states.md) for state. The dictionary decision and a data-flow page are coming with the end of this milestone.
+Decision records: [ADR 001](docs/adr/001-ml-kit-digital-ink.md) for recognition, [ADR 002](docs/adr/002-unihan-dictionary.md) for the dictionary and [ADR 004](docs/adr/004-riverpod-sealed-states.md) for state. [docs/data-flow.md](docs/data-flow.md) follows a drawing from strokes to result and lists every failure path with its test.
 
 ## Project structure
 
