@@ -226,4 +226,25 @@ void main() {
     expect(app.themeMode, ThemeMode.light);
     expect(app.theme!.brightness, Brightness.light);
   });
+
+  testWidgets(
+    'the prompt stays inside the pad at 1.5x text on a narrow screen',
+    (tester) async {
+      tester.platformDispatcher.textScaleFactorTestValue = 1.5;
+      addTearDown(tester.platformDispatcher.clearAllTestValues);
+
+      final p = await _pump(tester, surface: const Size(320, 1000));
+
+      final pad = tester.getRect(p.pad);
+      for (final text in [
+        'Write one character',
+        'Strokes stay on your device',
+      ]) {
+        final rect = tester.getRect(find.text(text));
+        expect(pad.contains(rect.topLeft), isTrue, reason: text);
+        expect(pad.contains(rect.bottomRight), isTrue, reason: text);
+      }
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

@@ -160,26 +160,30 @@ class _PadMessage extends ConsumerWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 36),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Write one character',
-                  textAlign: TextAlign.center,
-                  style: AppText.serif(
-                    size: 22,
-                    height: 1.2,
-                    italic: true,
-                    color: AppColors.hint,
+            // Scales down instead of overflowing the pad at large text sizes.
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Write one character',
+                    textAlign: TextAlign.center,
+                    style: AppText.serif(
+                      size: 22,
+                      height: 1.2,
+                      italic: true,
+                      color: AppColors.hint,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Strokes stay on your device',
-                  textAlign: TextAlign.center,
-                  style: AppText.sans(size: 12.5, color: AppColors.muted),
-                ),
-              ],
+                  const SizedBox(height: 6),
+                  Text(
+                    'Strokes stay on your device',
+                    textAlign: TextAlign.center,
+                    style: AppText.sans(size: 12.5, color: AppColors.muted),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
