@@ -1,8 +1,8 @@
 # Data flow
 
-How a drawing becomes a result, which parts exist today, and what happens when a step fails. The AI explanation is planned for M3 and is shown separately, so this page does not describe code that is not there.
+How a drawing becomes a result, which parts exist today, and what happens when a step fails. The AI explanation and the history, added in M3, come after the dictionary card and are described in their own sections.
 
-## What exists today
+## From strokes to the dictionary card
 
 ```mermaid
 sequenceDiagram
@@ -84,27 +84,69 @@ The no-voice case was not reproduced on a device. It is covered by tests with a 
 - **Recognition:** measured on an Android emulator, 34 to 144 ms for the `recognize` call, median about 55 ms, for ten character and language pairs. That leaves out the 600 ms pause before recognition starts. Details and what was not recorded are in [ADR 001](adr/001-ml-kit-digital-ink.md).
 - **Dictionary lookup:** measured once on the Medium_Phone emulator in a release build, ten lookups (five characters in Chinese and Japanese): 0 to 17 ms, median 2 ms, against a target of under 50 ms. This covers the lookup and the resolve step, not drawing, recognition or rendering. The variant-borrowing case and the first database copy were not timed. Details are in [ADR 002](adr/002-unihan-dictionary.md).
 
-## Planned for M3
+## The AI explanation
 
-None of this exists yet. It is the part of the original sequence that comes after the dictionary card.
+It starts when the lookup is loaded, and the dictionary card never waits for it. `ExplainController` only listens to the lookup state, so the sheet does not call it.
 
 ```mermaid
 sequenceDiagram
     participant S as Result sheet
-    participant K as Cache
-    participant E as Explainer (Gemini)
+    participant X as ExplainController
+    participant U as ExplainCharacter
+    participant K as ExplanationCache
+    participant E as LlmExplainer
+    participant V as ExplanationValidator
 
     Note over S: the dictionary card is already on screen
-    S->>K: get(character, language)
+    S->>X: lookup loaded
+    X->>U: call(entry, language)
+    U->>K: get(character, language, prompt version)
     alt cached
-        K-->>S: explanation
+        K-->>U: explanation
     else miss
-        S->>E: dictionary entry + schema
-        E-->>S: JSON explanation
-        S->>S: validate against the entry
-        S->>K: put(character, language, explanation)
+        U->>E: explain(entry, language)
+        E-->>U: explanation (one retry if invalid)
+        U->>K: put
     end
-    S-->>S: AI section fills in, labeled AI-generated
+    U->>V: check each example reading against the entry
+    V-->>U: verified or unverified per example
+    U-->>X: validated explanation
+    X-->>S: AI section fills in, labeled AI-generated
 ```
 
-The dictionary card never waits for this part. Readings and definitions come only from the dictionary, and anything the explainer says that disagrees with the entry is flagged. The failure paths for this part (timeout, invalid JSON) will be added here when it is built.
+- **Cache first.** The key is character, language and prompt version. A miss calls the model once. A failed call is not stored.
+- **Validation runs on every answer,** cached or not, so the marks always come from the current dictionary and validator.
+- **The AI card has its own state:** `ExplainState` is Idle, Loading, Ready (the explanation and a check per example) or Unavailable (a typed failure). Switching candidate keeps the old explanation until the new entry arrives.
+- **A stale answer is dropped,** with the same request counter as the lookup.
+
+More in [ai-usage.md](ai-usage.md), [ADR 003](adr/003-firebase-ai-logic.md) and [ADR 005](adr/005-grounded-llm.md).
+
+## History
+
+`HistoryController` listens to the lookup state too. When a lookup is loaded it records the character and language, then reloads the list.
+
+- **Stored:** character, language and time, in its own SQLite file (`history.db`), apart from the explanation cache because the cache repairs itself by deleting its file. The last 50 are kept and a repeat moves to the top.
+- **Shown:** `ListHistory` joins each entry with the dictionary, so readings and meanings still come from the dictionary and are not stored twice. An entry the dictionary cannot read is listed without them.
+- **Reopened:** a tile opens the same result sheet, and the explanation comes from the cache when it is there, so it opens without a network.
+- A lookup that found nothing or failed is not recorded.
+
+## AI failure paths
+
+The dictionary card stays in every case. Test names are from the test files. The full list with messages is in [ai-usage.md](ai-usage.md).
+
+| What fails | What the user sees | Test |
+| --- | --- | --- |
+| No Firebase settings in the build | "AI explanation is not set up in this build." | `explain_controller_test`: not configured is Unavailable |
+| No connection | "No connection, so there is no AI explanation. Open it again to retry." | `firebase_failure_mapper_test`: a socket error is offline |
+| Model takes more than 15 s | "The AI explanation took too long. Open it again to retry." | `llm_explainer_test`: ends a call that never answers, with no retry |
+| Invalid JSON twice | "The AI explanation could not be used." | `llm_explainer_test`: twice is dropped, after exactly one retry |
+| App Check, key, quota or blocked answer | "The AI service refused the request." | `firebase_failure_mapper_test`: App Check failing; a quota that is used up |
+| Cache cannot be read or written | Treated as a miss, or the answer is kept for this view | `explain_character_test`: a cache that cannot be read is a miss |
+| Answer arrives after the user moved on | Dropped, nothing shown | `explain_controller_test`: an answer that arrives after the sheet closed is dropped |
+| History cannot be read | "History is not available right now." | `history_controller_test`: a history that cannot be read is Unavailable |
+
+The offline case was seen on the emulator in airplane mode. The timeout, App Check rejection, 1.5x system font and Japanese were not tried on a device.
+
+## AI timing
+
+Measured on an Android emulator, 20 calls of the real prompt (five characters in Chinese and Japanese, debug and release builds): medians 3.9 s and 3.2 s, slowest 8.7 s, and one call in the app took 8 to 10 s. Tokens per call were 386 to 528. A physical device was not measured. The table is in [ADR 003](adr/003-firebase-ai-logic.md).

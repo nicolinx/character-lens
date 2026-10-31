@@ -16,12 +16,14 @@ Built:
 - [x] Pronunciation with the voices installed on the device, with a message when there is none
 - [x] Clean Architecture in three layers (`features`, `domain`, `data`), with no Flutter imports in `domain`
 - [x] Riverpod with sealed states, and typed failures that each end in a readable message
+- [x] AI explanation (components, memory hook, example words) from Gemini through Firebase AI Logic, in its own card labeled "AI-generated". The dictionary card never waits for it
+- [x] A validator that marks an example reading the dictionary does not confirm as unverified
+- [x] Explanations cached per character, language and prompt version, so each character costs one model call
+- [x] History of the last 50 characters, reopened from the cache without a network
 - [x] Unit and widget tests, run with `flutter analyze` and `flutter test` in GitHub Actions
 
 Planned:
 
-- [ ] AI explanation (components, mnemonic, example words) from Gemini, clearly labeled and checked against the dictionary
-- [ ] Cache and history
 - [ ] Evaluation script with real results
 - [ ] Demo video and case study
 
@@ -34,12 +36,13 @@ Planned:
 | Handwriting recognition | `google_mlkit_digital_ink_recognition` |
 | Dictionary | `sqflite`, built from Unihan with `sqlite3` |
 | Speech | `flutter_tts` |
+| AI explanation | `firebase_ai` (Gemini), `firebase_core`, `firebase_app_check` |
 | Tests | `flutter_test`, `mocktail`, `fake_async`, `sqflite_common_ffi` |
 | CI | GitHub Actions |
 
 ## System design
 
-There is no backend. Everything runs on the device, except the one-time download of each recognition model.
+There is no backend of my own. Recognition, the dictionary, the cache and the history run on the device. The network is used for the one-time download of each recognition model, and for the AI explanation, which is optional.
 
 ```mermaid
 flowchart LR
@@ -48,12 +51,16 @@ flowchart LR
     MLKit[ML Kit Digital Ink<br>on-device models]
     DB[(dictionary.db<br>bundled asset)]
     TTS[System TTS voices]
+    Cache[(explanation_cache.db<br>history.db)]
   end
   Google[Google model servers]
+  Gemini[Gemini via<br>Firebase AI Logic<br>with App Check]
   App --> MLKit
   App --> DB
   App --> TTS
+  App --> Cache
   MLKit -. first use of a language .-> Google
+  App -. character + dictionary entry .-> Gemini
 ```
 
 From stroke to result:
@@ -67,7 +74,19 @@ flowchart LR
   E --> F[Result sheet]
 ```
 
-Strokes stay on the device. Readings and meanings come only from the dictionary.
+Then the AI card, after the dictionary card is already on screen:
+
+```mermaid
+flowchart LR
+  A[Dictionary entry] --> B{Cached?}
+  B -- yes --> E
+  B -- no --> C[Gemini, JSON schema,<br>one retry if invalid]
+  C --> D[Cache]
+  D --> E[Validator marks<br>unverified readings]
+  E --> F[AI-generated card]
+```
+
+Strokes stay on the device. Readings and meanings come only from the dictionary. The model gets the recognized character and its dictionary entry, its answer is labeled AI-generated, and the readings in its example words are checked against the dictionary.
 
 ## Architecture
 
@@ -76,39 +95,43 @@ flowchart TB
   subgraph features
     canvas
     result
+    history
   end
   subgraph domain
-    UC[Use cases<br>RecognizeCharacters, ResolveCharacter]
-    IF[Interfaces<br>InkRecognizer, Dictionary, TtsService]
+    UC[Use cases<br>RecognizeCharacters, ResolveCharacter,<br>ExplainCharacter, ListHistory]
+    IF[Interfaces<br>InkRecognizer, Dictionary, TtsService,<br>Explainer, ExplanationCache, LookupHistory]
     EN[Entities and failures]
   end
   subgraph data
     ink[MlKitInkRecognizer]
     sql[SqliteDictionary]
     tts[FlutterTtsService]
+    ai[LlmExplainer<br>FirebaseExplanationModel]
+    cache[SqliteExplanationCache<br>SqliteLookupHistory]
   end
   canvas --> UC
   result --> UC
+  history --> UC
   UC --> IF
   data -. implements .-> IF
   main[main.dart] -. wires .-> data
 ```
 
 - **Features** hold screens, widgets and Riverpod controllers. They know the domain interfaces, never the concrete classes.
-- **Domain** is plain Dart with no Flutter imports. A use case exists only where there is a rule to apply: `RecognizeCharacters` filters candidates, and `ResolveCharacter` decides which readings to show for each language.
+- **Domain** is plain Dart with no Flutter imports. A use case exists only where there is a rule to apply: `RecognizeCharacters` filters candidates, `ResolveCharacter` decides which readings to show for each language, `ExplainCharacter` reads the cache before the model and runs the validator, and `ListHistory` joins saved lookups with the dictionary.
 - **Data** implements the interfaces. `main.dart` is the only place that names the concrete classes and overrides the providers, and tests override them with fakes.
-- **State** is a sealed class per concern: `CanvasState`, `LookupState` and `SpeechState`. The result sheet has its own state so closing it leaves the strokes and candidates as they were. See [ADR 004](docs/adr/004-riverpod-sealed-states.md).
-- **Failures** are typed (`InkFailure`, `DictionaryFailure`), and each one ends in a message the user can read.
+- **State** is a sealed class per concern: `CanvasState`, `LookupState`, `SpeechState`, `ExplainState` and `HistoryState`. The result sheet has its own state so closing it leaves the strokes and candidates as they were. See [ADR 004](docs/adr/004-riverpod-sealed-states.md).
+- **Failures** are typed (`InkFailure`, `DictionaryFailure`, `ExplanationFailure`), and each one ends in a message the user can read.
 
-Decision records: [ADR 001](docs/adr/001-ml-kit-digital-ink.md) for recognition, [ADR 002](docs/adr/002-unihan-dictionary.md) for the dictionary and [ADR 004](docs/adr/004-riverpod-sealed-states.md) for state. [docs/data-flow.md](docs/data-flow.md) follows a drawing from strokes to result and lists every failure path with its test.
+Decision records: [ADR 001](docs/adr/001-ml-kit-digital-ink.md) for recognition, [ADR 002](docs/adr/002-unihan-dictionary.md) for the dictionary, [ADR 003](docs/adr/003-firebase-ai-logic.md) for Gemini through Firebase AI Logic, [ADR 004](docs/adr/004-riverpod-sealed-states.md) for state and [ADR 005](docs/adr/005-grounded-llm.md) for the grounding and the validator. [docs/data-flow.md](docs/data-flow.md) follows a drawing from strokes to result and lists every failure path with its test, and [docs/ai-usage.md](docs/ai-usage.md) covers the AI parts, their cost and their limits.
 
 ## Project structure
 
 ```
 lib/
-  features/   canvas, result       screens, widgets, Riverpod controllers
+  features/   canvas, result, history, home  screens, widgets, Riverpod controllers
   domain/     ink, dictionary, explainer, tts  entities, failures, interfaces, use cases
-  data/       ink, dictionary, tts  implementations of the interfaces
+  data/       ink, dictionary, ai, cache, tts  implementations of the interfaces
   core/       theme
 tool/         builds the dictionary from Unihan
 assets/db/    the bundled dictionary and its license
@@ -133,23 +156,24 @@ flutter test
 
 iOS has not been built or run. The Android checks so far were on an emulator.
 
-The AI explanation, once it is in the app, needs Firebase settings. They are optional and kept out of the repo: see [docs/firebase-setup.md](docs/firebase-setup.md). Without them the app runs as before.
+The AI explanation needs Firebase settings. They are optional and kept out of the repo: see [docs/firebase-setup.md](docs/firebase-setup.md). Without them the app runs as before, and the AI card says it is not set up in this build.
 
 ## Tests
 
-339 tests: domain rules, the dictionary builder, SQLite access, the ML Kit adapter with fakes, controllers with `fake_async`, and widget tests that drive the real screen, including 1.5x text scale on a narrow screen.
+624 tests: domain rules, the dictionary builder, SQLite access, the ML Kit adapter and the Gemini caller with fakes, controllers with `fake_async`, and widget tests that drive the real screen, including 1.5x text scale on a narrow screen.
 
-Line coverage of the files the tests load, measured with `flutter test --coverage` on 2026-10-28:
+Line coverage of the files the tests load, measured with `flutter test --coverage` on 2026-10-31:
 
 | Area | Lines covered |
 | --- | --- |
 | `lib/domain` | 92% |
-| `lib/data` | 85% |
+| `lib/data` | 90% |
 | `lib/features/canvas` | 99% |
-| `lib/features/result` | 99% |
-| All | 96.5% (1143 of 1185) |
+| `lib/features/result` | 98% |
+| `lib/features/history` | 97% |
+| All | 95.9% (1831 of 1909) |
 
-Two gaps behind that number. The adapters that call the real ML Kit plugin (`lib/data/ink/ink_plugin.dart`) are not run by any test, because the plugin needs a device. `lib/main.dart` is not counted, because no test loads it. Coverage says which lines ran, not that the behavior is right. Some tests were also checked by breaking the code on purpose and confirming they fail.
+Two gaps behind that number. The adapters that call the real ML Kit plugin (`lib/data/ink/ink_plugin.dart`) are not run by any test, because the plugin needs a device. `lib/main.dart`, `firebase_bootstrap.dart`, `firebase_config.dart` and `firebase_explanation_model.dart` are not counted, because no test loads them: they start Firebase or call Gemini, which needs a real project. The prompt, the retry, the parser and the failure mapping around that call are tested with a fake model. Coverage says which lines ran, not that the behavior is right. Some tests were also checked by breaking the code on purpose and confirming they fail.
 
 ```
 flutter test --coverage
@@ -171,8 +195,15 @@ dart run tool/build_dictionary.dart <unihan folder> [output path]
 
 Unihan data is Copyright (c) 1991-2026 Unicode, Inc. and is used under the Unicode License v3. The license text is in [assets/db/UNICODE-LICENSE.txt](assets/db/UNICODE-LICENSE.txt). The dictionary keeps selected fields and reorganizes them, so it is not the official Unicode data, and Unicode does not endorse this app.
 
+## Privacy
+
+Strokes never leave the device. The AI request holds only the recognized character, the language and its dictionary entry. There is no account and no analytics. If you run it with your own Firebase project on the Gemini free tier, the pricing page (checked 2026-10-27) says the content sent is used to improve Google products.
+
 ## Known limits
 
+- The AI explanation is labeled and its example readings are checked, but the check is loose. "Verified" means the dictionary does not disagree, not that the word's reading is right, and correct readings with sound changes (学校 is がっこう) get flagged. Components, memory hooks and usage notes are not checked at all, and a memory hook can be plausible-sounding folk etymology. See [ADR 005](docs/adr/005-grounded-llm.md).
+- AI latency was measured on an emulator with a small sample (medians 3.2 to 3.9 s, one call at 8.7 s). It was not measured on a physical device. App Check with Play Integrity is not confirmed to be enforced yet.
+- There is no evaluation on a larger set yet.
 - Pronunciation comes from the device's voice engine. It reads the character in its own way, which can differ from the reading in the dictionary card. Korean engines often cannot read Hanja.
 - Unihan does not link every pair of simplified, traditional and Japanese forms. For some characters a reading is borrowed from one linked variant, and the card says so. Other pairs stay unlinked.
 - Recognition quality comes from ML Kit. The decision record has the measurements taken so far, and they are small.
