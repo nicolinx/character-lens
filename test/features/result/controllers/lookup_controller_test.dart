@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:character_lens/domain/entities/han_language.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
-import 'package:character_lens/domain/usecases/resolve_character.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
+import 'package:character_lens/domain/dictionary/resolve_character.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
 import 'package:character_lens/features/result/controllers/lookup_controller.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';

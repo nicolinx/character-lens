@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
-import 'package:character_lens/domain/entities/character_view.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/dictionary/character_view.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
 import 'package:character_lens/features/result/result_labels.dart';
 import 'package:character_lens/features/result/widgets/result_card.dart';
 

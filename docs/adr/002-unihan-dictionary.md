@@ -55,7 +55,7 @@ A character is kept only if it has at least one reading or a definition. Lists a
 
 Display forms: Chinese shows the first simplified variant that differs from the character, Korean (Hanja) shows the first traditional variant that differs, and Japanese shows the character whose readings were used.
 
-Examples from the data, each with a test in `test/domain/usecases/resolve_character_test.dart`:
+Examples from the data, each with a test in `test/domain/dictionary/resolve_character_test.dart`:
 
 - 語 has the simplified variant 语. 语 has no Japanese or Korean readings, so its Japanese and Korean rows are borrowed from 語.
 - 气 lists two traditional variants, `气 氣`. The rule skips 气 itself and takes 氣, so the Korean form is 氣 and the Korean reading 기 is borrowed from it.

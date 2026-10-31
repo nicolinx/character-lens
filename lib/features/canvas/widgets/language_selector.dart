@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/model_status.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/model_status.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/ink_language_labels.dart';
 import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
@@ -65,6 +65,7 @@ class _LanguageTab extends StatelessWidget {
       selected: selected,
       label: '${language.name}, ${describeModelStatus(status)}',
       excludeSemantics: true,
+      onTap: onTap,
       child: InkWell(
         onTap: onTap,
         child: Container(

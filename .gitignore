@@ -35,3 +35,6 @@ devtools_options.yaml
 
 # Test coverage output
 /coverage/
+
+# Firebase settings (keys), passed with --dart-define-from-file
+firebase.local.json

@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/features/result/controllers/explain_state.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';
 import 'package:character_lens/features/result/controllers/speech_state.dart';
 import 'package:character_lens/features/result/result_labels.dart';
 import 'package:character_lens/features/result/widgets/across_languages_card.dart';
 import 'package:character_lens/features/result/widgets/candidate_switcher.dart';
 import 'package:character_lens/features/result/widgets/dictionary_card.dart';
+import 'package:character_lens/features/result/widgets/explain_card.dart';
 import 'package:character_lens/features/result/widgets/result_header.dart';
 
 class ResultSheetView extends StatelessWidget {
@@ -21,6 +23,7 @@ class ResultSheetView extends StatelessWidget {
     required this.onClose,
     this.speech = const SpeechIdle(),
     required this.onSpeak,
+    this.explain = const ExplainIdle(),
   });
 
   final LookupOpen state;
@@ -32,6 +35,8 @@ class ResultSheetView extends StatelessWidget {
 
   final SpeechState speech;
   final ValueChanged<String> onSpeak;
+
+  final ExplainState explain;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +95,7 @@ class ResultSheetView extends StatelessWidget {
                   LookupLoaded(:final view) => [
                     DictionaryCard(view: view),
                     AcrossLanguagesCard(view: view),
+                    ExplainCard(state: explain, locale: language.locale),
                     const _Footer(),
                   ],
                   LookupNotFound() => [

@@ -1,17 +1,19 @@
 import 'package:character_lens/app.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/model_status.dart';
-import 'package:character_lens/domain/entities/writing_area.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/model_status.dart';
+import 'package:character_lens/domain/ink/writing_area.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
+import 'package:character_lens/features/history/controllers/lookup_history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../support/fake_dictionary.dart';
+import '../../../support/fake_lookup_history.dart';
 import '../../../support/fake_ink_recognizer.dart';
 
 class _Pad {
@@ -43,6 +45,7 @@ Future<_Pad> _pump(
     ProviderScope(
       overrides: [
         inkRecognizerProvider.overrideWithValue(recognizer),
+        lookupHistoryProvider.overrideWithValue(FakeLookupHistory()),
         dictionaryProvider.overrideWithValue(FakeDictionary.bare('木末本朮禾')),
       ],
       child: const CharacterLensApp(),
@@ -226,4 +229,25 @@ void main() {
     expect(app.themeMode, ThemeMode.light);
     expect(app.theme!.brightness, Brightness.light);
   });
+
+  testWidgets(
+    'the prompt stays inside the pad at 1.5x text on a narrow screen',
+    (tester) async {
+      tester.platformDispatcher.textScaleFactorTestValue = 1.5;
+      addTearDown(tester.platformDispatcher.clearAllTestValues);
+
+      final p = await _pump(tester, surface: const Size(320, 1000));
+
+      final pad = tester.getRect(p.pad);
+      for (final text in [
+        'Write one character',
+        'Strokes stay on your device',
+      ]) {
+        final rect = tester.getRect(find.text(text));
+        expect(pad.contains(rect.topLeft), isTrue, reason: text);
+        expect(pad.contains(rect.bottomRight), isTrue, reason: text);
+      }
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

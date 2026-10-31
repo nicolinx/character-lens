@@ -1,38 +1,53 @@
 import 'dart:async';
 
 import 'package:character_lens/app.dart';
-import 'package:character_lens/domain/entities/candidate.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/model_status.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
+import 'package:character_lens/domain/ink/candidate.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/model_status.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
+import 'package:character_lens/features/history/controllers/lookup_history_provider.dart';
+import 'package:character_lens/features/result/controllers/explainer_provider.dart';
+import 'package:character_lens/features/result/controllers/explanation_cache_provider.dart';
 import 'package:character_lens/features/result/controllers/lookup_controller.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';
 import 'package:character_lens/features/result/controllers/speech_controller.dart';
 import 'package:character_lens/features/result/controllers/speech_state.dart';
 import 'package:character_lens/features/result/controllers/tts_service_provider.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
-import 'package:character_lens/domain/repositories/tts_service.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/explainer/explanation.dart';
+import 'package:character_lens/domain/explainer/explanation_failure.dart';
+import 'package:character_lens/domain/tts/tts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_dictionary.dart';
+import '../../support/fake_lookup_history.dart';
+import '../../support/fake_explainer.dart';
+import '../../support/fake_explanation_cache.dart';
 import '../../support/fake_ink_recognizer.dart';
 import '../../support/fake_tts_service.dart';
 import '../../support/sample_entries.dart';
 
 class _Screen {
-  _Screen(this.tester, this.container, this.dictionary, this.tts);
+  _Screen(
+    this.tester,
+    this.container,
+    this.dictionary,
+    this.tts,
+    this.explainer,
+  );
 
   final WidgetTester tester;
   final ProviderContainer container;
   final FakeDictionary dictionary;
   final FakeTtsService tts;
+  final FakeExplainer explainer;
 
   CanvasState get canvas => container.read(canvasControllerProvider);
   LookupState get lookup => container.read(lookupControllerProvider);
@@ -72,12 +87,16 @@ Future<_Screen> _pump(WidgetTester tester) async {
     SampleEntries.gakuTraditional,
   ]);
   final tts = FakeTtsService();
+  final explainer = FakeExplainer();
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
         inkRecognizerProvider.overrideWithValue(recognizer),
+        lookupHistoryProvider.overrideWithValue(FakeLookupHistory()),
         dictionaryProvider.overrideWithValue(dictionary),
         ttsServiceProvider.overrideWithValue(tts),
+        explainerProvider.overrideWithValue(explainer),
+        explanationCacheProvider.overrideWithValue(FakeExplanationCache()),
       ],
       child: const CharacterLensApp(),
     ),
@@ -89,6 +108,7 @@ Future<_Screen> _pump(WidgetTester tester) async {
     ProviderScope.containerOf(tester.element(find.byType(WritingPad))),
     dictionary,
     tts,
+    explainer,
   );
 }
 
@@ -289,6 +309,192 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('No voice installed for this language'), findsNothing);
+    });
+  });
+
+  group('the AI section', () {
+    testWidgets('fills in after the dictionary card is already there', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      screen.explainer.gates['語'] = Completer<void>();
+      await screen.drawAndRecognize();
+
+      await screen.tapLookUp('語');
+
+      expect(find.text('Verified · Unihan'), findsOneWidget);
+      expect(find.text('Explain it'), findsOneWidget);
+      expect(find.text('Memory hook'), findsNothing);
+
+      screen.explainer.gates['語']!.complete();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Memory hook'), findsOneWidget);
+      expect(find.text('A memory aid.'), findsOneWidget);
+    });
+
+    testWidgets('a failure is a quiet message and the card stays', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      screen.explainer.error = const ExplainerOfflineFailure();
+      await screen.drawAndRecognize();
+
+      await screen.tapLookUp('語');
+
+      expect(
+        find.textContaining('No connection, so there is no AI explanation'),
+        findsOneWidget,
+      );
+      expect(find.text('Verified · Unihan'), findsOneWidget);
+      expect(find.text('Across languages'), findsOneWidget);
+    });
+
+    testWidgets('a build without Firebase settings says so', (tester) async {
+      final screen = await _pump(tester);
+      screen.explainer.error = const ExplainerNotConfiguredFailure();
+      await screen.drawAndRecognize();
+
+      await screen.tapLookUp('語');
+
+      expect(
+        find.text('AI explanation is not set up in this build.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('flags an example whose reading the dictionary does not '
+        'confirm', (tester) async {
+      final screen = await _pump(tester);
+      screen.explainer.results['語'] = const Explanation(
+        components: [],
+        mnemonic: 'Speech.',
+        examples: [
+          ExplanationExample(word: '语言', reading: 'yǔyán', meaning: 'language'),
+          ExplanationExample(word: '语法', reading: 'yufa', meaning: 'grammar'),
+        ],
+      );
+      await screen.drawAndRecognize();
+
+      await screen.tapLookUp('語');
+
+      expect(find.text('Unverified reading'), findsOneWidget);
+    });
+
+    testWidgets('switching candidate shows the explanation of the new one', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      screen.explainer.results['学'] = const Explanation(
+        components: [],
+        mnemonic: 'About 学.',
+        examples: [],
+      );
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+
+      await tester.tap(find.byKey(const Key('switch-学')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('About 学.'), findsOneWidget);
+      expect(find.text('A memory aid.'), findsNothing);
+    });
+
+    testWidgets('opening the same character again is served from the cache', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+
+      await screen.tapLookUp('語');
+
+      expect(find.text('A memory aid.'), findsOneWidget);
+      expect(screen.explainer.calls, hasLength(1));
+    });
+
+    testWidgets('closing the sheet while it loads leaves nothing behind', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      screen.explainer.gates['語'] = Completer<void>();
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+
+      await screen.closeSheet();
+      screen.explainer.gates['語']!.complete();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Explain it'), findsNothing);
+      expect(screen.canvas, isA<CanvasResult>());
+    });
+  });
+
+  group('the history', () {
+    Future<void> openHistory(WidgetTester tester) async {
+      await tester.tap(find.text('History'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('lists a character once it was looked up', (tester) async {
+      final screen = await _pump(tester);
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+
+      await openHistory(tester);
+
+      expect(find.text('1 character · saved on this device'), findsOneWidget);
+      expect(find.text('语'), findsOneWidget);
+    });
+
+    testWidgets('lists a character looked up twice only once', (tester) async {
+      final screen = await _pump(tester);
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+
+      await openHistory(tester);
+
+      expect(find.text('1 character · saved on this device'), findsOneWidget);
+    });
+
+    testWidgets('a character can be opened again from the list', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+      await openHistory(tester);
+
+      await tester.tap(find.text('语'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Verified · Unihan'), findsOneWidget);
+      expect(find.text('A memory aid.'), findsOneWidget);
+      expect(screen.explainer.calls, hasLength(1));
+    });
+
+    testWidgets('a lookup that found nothing is not listed', (tester) async {
+      final screen = await _pump(tester);
+      screen.dictionary.lookupErrors['語'] =
+          const DictionaryUnavailableFailure();
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+
+      await openHistory(tester);
+
+      expect(
+        find.text(
+          'Characters you look up appear here, and open instantly offline.',
+        ),
+        findsOneWidget,
+      );
     });
   });
 }

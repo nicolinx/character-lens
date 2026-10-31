@@ -1,4 +1,4 @@
-import 'package:character_lens/domain/entities/character_entry.dart';
+import 'package:character_lens/domain/dictionary/character_entry.dart';
 
 /// Entries copied from Unihan 18.0.0 (2026-07-31), trimmed to the fields the
 /// app uses. They are the cases that matter for variants: a character with no

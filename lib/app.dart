@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:character_lens/core/theme/app_theme.dart';
-import 'package:character_lens/features/canvas/canvas_screen.dart';
+import 'package:character_lens/features/home/home_screen.dart';
 
 class CharacterLensApp extends StatelessWidget {
   const CharacterLensApp({super.key});
@@ -12,7 +12,7 @@ class CharacterLensApp extends StatelessWidget {
       title: 'Character Lens',
       theme: AppTheme.light,
       themeMode: ThemeMode.light,
-      home: const CanvasScreen(),
+      home: const HomeScreen(),
     );
   }
 }

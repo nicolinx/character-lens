@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:character_lens/domain/entities/character_view.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/failures/dictionary_failure.dart';
+import 'package:character_lens/domain/dictionary/character_view.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
 
 /// Separate from `CanvasState`: closing the sheet must leave the strokes and
 /// the candidates as they were.

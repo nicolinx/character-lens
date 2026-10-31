@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:google_mlkit_digital_ink_recognition/google_mlkit_digital_ink_recognition.dart'
     as mlkit;
 
-import 'package:character_lens/domain/entities/stroke.dart';
+import 'package:character_lens/domain/ink/stroke.dart';
 
 class StrokeMapper {
   const StrokeMapper();

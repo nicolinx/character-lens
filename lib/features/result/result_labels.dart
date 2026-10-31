@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:character_lens/domain/entities/character_view.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
+import 'package:character_lens/domain/dictionary/character_view.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/explainer/explanation_failure.dart';
 
 extension HanLanguageLabels on HanLanguage {
   String get code => switch (this) {
@@ -38,3 +39,18 @@ String variantText(FormVariant variant) => switch (variant.kind) {
   VariantKind.traditional => 'Traditional ${variant.character}',
   VariantKind.simplified => 'Simplified ${variant.character}',
 };
+
+String explainUnavailableMessage(ExplanationFailure failure) =>
+    switch (failure) {
+      ExplainerNotConfiguredFailure() =>
+        'AI explanation is not set up in this build.',
+      ExplainerOfflineFailure() =>
+        'No connection, so there is no AI explanation. Open it again to retry.',
+      ExplainerTimeoutFailure() =>
+        'The AI explanation took too long. Open it again to retry.',
+      ExplainerInvalidOutputFailure() =>
+        'The AI explanation could not be used.',
+      ExplainerRejectedFailure() => 'The AI service refused the request.',
+      ExplainerFailure() =>
+        'AI explanation is unavailable right now. Open it again to retry.',
+    };

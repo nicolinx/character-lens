@@ -1,7 +1,7 @@
 import 'package:flutter_tts/flutter_tts.dart';
 
-import 'package:character_lens/domain/entities/han_language.dart';
-import 'package:character_lens/domain/repositories/tts_service.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/tts/tts_service.dart';
 
 class FlutterTtsService implements TtsService {
   FlutterTtsService(this._tts);

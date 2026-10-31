@@ -1,16 +1,19 @@
 import 'dart:async';
 
 import 'package:character_lens/app.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
-import 'package:character_lens/domain/entities/model_status.dart';
-import 'package:character_lens/domain/failures/ink_failure.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/domain/ink/model_status.dart';
+import 'package:character_lens/domain/ink/ink_failure.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
+import 'package:character_lens/features/history/controllers/lookup_history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_dictionary.dart';
+import '../../support/fake_lookup_history.dart';
 import '../../support/fake_ink_recognizer.dart';
 
 Future<void> _pump(WidgetTester tester, FakeInkRecognizer recognizer) async {
@@ -18,6 +21,7 @@ Future<void> _pump(WidgetTester tester, FakeInkRecognizer recognizer) async {
     ProviderScope(
       overrides: [
         inkRecognizerProvider.overrideWithValue(recognizer),
+        lookupHistoryProvider.overrideWithValue(FakeLookupHistory()),
         dictionaryProvider.overrideWithValue(FakeDictionary.bare('木末本朮禾')),
       ],
       child: const CharacterLensApp(),
@@ -109,5 +113,27 @@ void main() {
 
     expect(size.height, greaterThanOrEqualTo(48));
     expect(size.width, greaterThanOrEqualTo(48));
+  });
+
+  testWidgets('the language tabs can be activated by a screen reader', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final recognizer = FakeInkRecognizer()
+      ..statuses[InkLanguage.chinese] = const ModelReady()
+      ..statuses[InkLanguage.japanese] = const ModelReady();
+    await _pump(tester, recognizer);
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(CharacterLensApp)),
+    );
+
+    tester.semantics.tap(find.semantics.byLabel(RegExp('^Japanese')));
+    await tester.pump();
+
+    expect(
+      container.read(canvasControllerProvider).language,
+      InkLanguage.japanese,
+    );
+    handle.dispose();
   });
 }

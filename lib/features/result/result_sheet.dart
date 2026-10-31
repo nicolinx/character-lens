@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
-import 'package:character_lens/domain/entities/han_language.dart';
-import 'package:character_lens/domain/entities/ink_language.dart';
+import 'package:character_lens/domain/dictionary/han_language.dart';
+import 'package:character_lens/domain/ink/ink_language.dart';
+import 'package:character_lens/features/result/controllers/explain_controller.dart';
 import 'package:character_lens/features/result/controllers/lookup_controller.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';
 import 'package:character_lens/features/result/controllers/speech_controller.dart';
@@ -57,6 +58,7 @@ class _ResultSheet extends ConsumerWidget {
       state: state,
       candidates: candidates,
       speech: ref.watch(speechControllerProvider),
+      explain: ref.watch(explainControllerProvider),
       onSpeak: (text) => speech.speak(text, state.language.han),
       onCandidate: (character) {
         speech.stop();

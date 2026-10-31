@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
-import 'package:character_lens/domain/entities/stroke_point.dart';
-import 'package:character_lens/domain/entities/writing_area.dart';
+import 'package:character_lens/domain/ink/stroke_point.dart';
+import 'package:character_lens/domain/ink/writing_area.dart';
 import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/widgets/canvas_painters.dart';
 import 'package:character_lens/features/canvas/controllers/model_status_controller.dart';
@@ -160,26 +160,30 @@ class _PadMessage extends ConsumerWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 36),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Write one character',
-                  textAlign: TextAlign.center,
-                  style: AppText.serif(
-                    size: 22,
-                    height: 1.2,
-                    italic: true,
-                    color: AppColors.hint,
+            // Scales down instead of overflowing the pad at large text sizes.
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Write one character',
+                    textAlign: TextAlign.center,
+                    style: AppText.serif(
+                      size: 22,
+                      height: 1.2,
+                      italic: true,
+                      color: AppColors.hint,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Strokes stay on your device',
-                  textAlign: TextAlign.center,
-                  style: AppText.sans(size: 12.5, color: AppColors.muted),
-                ),
-              ],
+                  const SizedBox(height: 6),
+                  Text(
+                    'Strokes stay on your device',
+                    textAlign: TextAlign.center,
+                    style: AppText.sans(size: 12.5, color: AppColors.muted),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
