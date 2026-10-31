@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:character_lens/core/theme/app_colors.dart';
 import 'package:character_lens/core/theme/app_text.dart';
+import 'package:character_lens/features/about/about_sheet.dart';
 import 'package:character_lens/features/canvas/widgets/candidate_chips.dart';
 import 'package:character_lens/features/canvas/widgets/canvas_status_line.dart';
 import 'package:character_lens/features/canvas/widgets/language_selector.dart';
@@ -23,7 +24,6 @@ class CanvasScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _Brand(),
-              SizedBox(height: 18),
               LanguageSelector(),
               SizedBox(height: 4),
               ModelStatusLine(),
@@ -75,11 +75,17 @@ class _Brand extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        Flexible(
+        Expanded(
           child: Text(
             'Character Lens',
             style: AppText.serif(size: 22, weight: 500, height: 1.1),
           ),
+        ),
+        IconButton(
+          tooltip: 'About',
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          icon: const Icon(Icons.info_outline, color: AppColors.muted),
+          onPressed: () => showAboutSheet(context),
         ),
       ],
     );
