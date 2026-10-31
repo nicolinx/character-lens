@@ -37,7 +37,7 @@ Required: `components`, `mnemonic`, `examples`. The schema is `explanationSchema
 
 ## Retry once, then drop
 
-`LlmExplainer` makes up to two attempts. Only an **invalid answer** is asked for again. A timeout (15 s per attempt), no connection, or a rejected request is not retried, because asking again would not change the cause. After a second invalid answer the AI card says "The AI explanation could not be used." and nothing is cached. The dictionary card is unaffected. The worst case is two slow attempts, which is up to 30 s. The 15 s value comes from the spike (median 3.2 to 3.9 s, slowest 8.7 s in 20 calls) and was not tuned further.
+`LlmExplainer` makes up to two attempts. Only an **invalid answer** is asked for again. A timeout (15 s per attempt), no connection, or a rejected request is not retried, because asking again would not change the cause. After a second invalid answer the AI card says "The AI explanation could not be used." and nothing is cached. The dictionary card is unaffected. The worst case is two slow attempts, which is up to 30 s. The 15 s value comes from the spike (median 3.2 to 3.9 s, slowest 8.7 s in 20 calls) and was not tuned further. A later emulator run had one call at 24 s and the timeout card showed, so some calls on a poor network will hit it.
 
 ## The validator
 

@@ -38,14 +38,15 @@ A spike on 2026-10-28, on the Medium_Phone Android emulator, with the real promp
 - The very first two calls ever (木, debug) took 8.2 s and 5.6 s. The first call also pays for the App Check token exchange. This was not separated out.
 - Tokens per call: 279 to 302 in, 102 to 239 out, 386 to 528 in total. At the paid list price on the pricing page (dated 2026-10-27, $0.25 in and $1.50 out per 1M tokens) that is about $0.0002 to $0.0004 a call. This is derived from the price list, not billed, and the free tier costs nothing.
 - All 20 answers were bare JSON that parsed. No call failed.
-- In the app, one call on the History flow took about 8 to 10 s. It was a single observation and was not repeated.
+- In the app, one call on the History flow took about 8 to 10 s, observed once.
+- A second run on 2026-10-31 (debug build, the same emulator, the same five characters drawn by hand in both languages) was slower: 11 calls for 10 characters, median 6.2 s, min 3.2 s, max 24.2 s, 2 of 11 under 4 s. The slow calls came in a block (calls 4 to 7), then it recovered. A ping from the emulator to the Firebase host lost 2 of 3 packets at the time, but ICMP on an emulator is unreliable and the cause was not established. Tokens were in the same range (279 to 302 in, 107 to 231 out). One call went past the 15 s timeout and the card showed "The AI explanation took too long", then the character was explained on the next try.
 - The release build with Firebase starts with no extra R8 keep rules for the three Firebase packages (ML Kit needed them in M2). The APK went from 69.8 MB to 72.3 MB.
 
-The PRD target is "under 4 s typical, with a skeleton". The medians are under it, the tails are not, and the sample is small and from an emulator. A physical device was not measured.
+The PRD target is "under 4 s typical, with a skeleton". The spike medians were under it and the second run's was not. Latency varies a lot, with a tail past the 15 s timeout, and both samples are small and from an emulator. A physical device was not measured, so the target is not shown to be met.
 
 ## Consequences
 
-- The card shows a skeleton first, and the explanation fills in. A tail of 5 to 10 s is possible.
+- The card shows a skeleton first, and the explanation fills in. Some calls take 10 s or more and a few may end in the timeout card.
 - **Free tier data use.** On the free tier, the pricing page (2026-10-27) says the content sent is used to improve Google products. What is sent is the recognized character and its dictionary entry, never the strokes, so a visitor's drawing does not leave the device. This is also in the README.
 - **App Check is not proven for Play Integrity yet.** In the release spike the calls succeeded, but enforcement was off for AI Logic, so that does not show the token was valid. Auto-enforcement for Firebase AI Logic starts on 2026-11-02. The App Check metrics page in the console would show it. This is checked in the M3 acceptance pass.
 - The debug token and the Firebase settings are per developer. A visitor who wants the AI card has to set up their own Firebase project.

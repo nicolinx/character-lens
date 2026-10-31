@@ -145,8 +145,8 @@ The dictionary card stays in every case. Test names are from the test files. The
 | Answer arrives after the user moved on | Dropped, nothing shown | `explain_controller_test`: an answer that arrives after the sheet closed is dropped |
 | History cannot be read | "History is not available right now." | `history_controller_test`: a history that cannot be read is Unavailable |
 
-The offline case was seen on the emulator in airplane mode. The timeout, App Check rejection, 1.5x system font and Japanese were not tried on a device.
+The offline, timeout and refused cases were seen on the emulator, and so were the 1.5x system font and Japanese. An App Check rejection with enforcement on was not tried, and no physical device was used.
 
 ## AI timing
 
-Measured on an Android emulator, 20 calls of the real prompt (five characters in Chinese and Japanese, debug and release builds): medians 3.9 s and 3.2 s, slowest 8.7 s, and one call in the app took 8 to 10 s. Tokens per call were 386 to 528. A physical device was not measured. The table is in [ADR 003](adr/003-firebase-ai-logic.md).
+Measured on an Android emulator with the real prompt. A spike of 20 calls (debug and release builds): medians 3.9 s and 3.2 s, slowest 8.7 s. A second run of 11 calls on 2026-10-31 (debug, on a poor network): median 6.2 s, slowest 24.2 s, and one call went past the 15 s timeout. Tokens per call were 386 to 528. A physical device was not measured. The tables are in [ADR 003](adr/003-firebase-ai-logic.md).

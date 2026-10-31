@@ -73,13 +73,14 @@ The controller only reads the lookup state. It starts when the lookup is loaded 
 | --- | --- | --- |
 | Time per call, debug build | median 3.9 s, 3.1 to 5.3 s, n=10 | spike, emulator |
 | Time per call, release build | median 3.2 s, 3.0 to 8.7 s, n=10 | spike, emulator |
+| Time per call, second run, debug build | median 6.2 s, 3.2 to 24.2 s, n=11 | 2026-10-31, emulator, a poor network at the time |
 | First two calls ever | 8.2 s and 5.6 s | spike, includes the App Check token exchange |
-| Tokens per call | 386 to 528 in total | `usageMetadata` in the spike |
+| Tokens per call | 386 to 528 in total | `usageMetadata` in the spike and the second run (387 to 515) |
 | Price per call, paid list | about $0.0002 to $0.0004 | derived from the price page of 2026-10-27, not billed |
 | Price on the free tier | $0 | pricing page |
 | Cache hit | no call, shown at once | tested; seen on the emulator after the first answer |
 
-What the numbers do not cover: a physical device, a slow network, many users, the free-tier rate limits, or latency across a longer period. The PRD target is "under 4 s typical, with a skeleton". Medians were under it and tails were not. One call in the app took about 8 to 10 s, observed once.
+What the numbers do not cover: a physical device, a slow network, many users, the free-tier rate limits, or latency across a longer period. The PRD target is "under 4 s typical, with a skeleton". The spike medians were under it, the second run's median was not (6.2 s), and one of its 11 calls went past the 15 s timeout and showed the timeout card. Latency varies a lot, so the target is not shown to be met.
 
 ## Failure paths
 
@@ -96,7 +97,7 @@ Every failure leaves the dictionary card in place and shows one quiet line in th
 | User moves on while it loads | Dropped, nothing shown | `explain_controller_test`: an answer that arrives after the sheet closed is dropped |
 | Cache cannot be read or written | Treated as a miss, or the answer is kept for this view | `explain_character_test`: a cache that cannot be read is a miss; a cache that cannot be written does not lose the answer |
 
-Not tried on a device: a timeout, an App Check rejection with enforcement on, 1.5x system font on the AI card, and Japanese.
+Seen on the emulator: the offline card, the timeout card (once, for 水 in Japanese), the refused card (with a deliberately wrong API key, so the underlying error is not known), the 1.5x system font on the AI card, and Japanese. Not tried: an App Check rejection with enforcement on, and a physical device.
 
 ## Privacy
 

@@ -23,8 +23,8 @@ class LlmExplainer implements Explainer {
     this.timeout = defaultTimeout,
   }) : _promptBuilder = promptBuilder ?? ExplanationPromptBuilder();
 
-  /// Per attempt. In 20 calls the slowest took 8.7 s and the median was 3.2 to
-  /// 3.9 s, so this leaves room without a long skeleton. Not tuned further.
+  /// Per attempt. The spike's slowest of 20 calls was 8.7 s, but a later run
+  /// had one at 24 s, so a slow network can still hit it. Not tuned further.
   static const defaultTimeout = Duration(seconds: 15);
 
   /// One answer, plus one retry when the first is invalid.
