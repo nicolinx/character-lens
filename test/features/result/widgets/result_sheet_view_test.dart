@@ -4,6 +4,8 @@ import 'package:character_lens/domain/dictionary/han_language.dart';
 import 'package:character_lens/domain/ink/ink_language.dart';
 import 'package:character_lens/domain/dictionary/dictionary_failure.dart';
 import 'package:character_lens/domain/dictionary/resolve_character.dart';
+import 'package:character_lens/domain/explainer/explanation_failure.dart';
+import 'package:character_lens/features/result/controllers/explain_state.dart';
 import 'package:character_lens/features/result/controllers/lookup_state.dart';
 import 'package:character_lens/features/result/controllers/speech_state.dart';
 import 'package:character_lens/features/result/widgets/dictionary_card.dart';
@@ -51,6 +53,7 @@ Future<_Calls> _pump(
   Size size = const Size(400, 1400),
   SpeechState speech = const SpeechIdle(),
   double bottomInset = 0,
+  ExplainState explain = const ExplainIdle(),
 }) async {
   await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -73,6 +76,7 @@ Future<_Calls> _pump(
             onClose: () => calls.closes++,
             speech: speech,
             onSpeak: calls.spoken.add,
+            explain: explain,
           ),
         ),
       ),
@@ -230,10 +234,30 @@ void main() {
       );
     });
 
-    testWidgets('has no AI section', (tester) async {
+    testWidgets('shows the AI section after the dictionary cards', (
+      tester,
+    ) async {
       await _pump(tester, await _loaded('木', _cn));
 
-      expect(find.textContaining('AI'), findsNothing);
+      final dictionary = tester.getTopLeft(find.text('Dictionary')).dy;
+      final across = tester.getTopLeft(find.text('Across languages')).dy;
+      final explain = tester.getTopLeft(find.text('Explain it')).dy;
+      expect(across, greaterThan(dictionary));
+      expect(explain, greaterThan(across));
+      expect(find.text('AI-generated'), findsOneWidget);
+    });
+
+    testWidgets('shows what the explain state says', (tester) async {
+      await _pump(
+        tester,
+        await _loaded('木', _cn),
+        explain: const ExplainUnavailable(ExplainerOfflineFailure()),
+      );
+
+      expect(
+        find.textContaining('No connection, so there is no AI explanation'),
+        findsOneWidget,
+      );
     });
   });
 
@@ -396,6 +420,26 @@ void main() {
       );
 
       expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('the AI section is only for a loaded entry', () {
+    testWidgets('not while loading, not found or failed', (tester) async {
+      await _pump(tester, const LookupLoading(character: '木', language: _cn));
+      expect(find.text('Explain it'), findsNothing);
+
+      await _pump(tester, const LookupNotFound(character: '木', language: _cn));
+      expect(find.text('Explain it'), findsNothing);
+
+      await _pump(
+        tester,
+        const LookupFailed(
+          character: '木',
+          language: _cn,
+          failure: DictionaryUnavailableFailure(),
+        ),
+      );
+      expect(find.text('Explain it'), findsNothing);
     });
   });
 

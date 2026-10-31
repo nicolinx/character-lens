@@ -13,6 +13,10 @@ abstract final class AppColors {
   static const moss = Color(0xFF2F6A4F);
   static const mossSoft = Color(0xFFE3EFE7);
   static const idleDot = Color(0xFFB9B09B);
+  static const aiSoft = Color(0xFFEFE6F7);
+  static const ai = Color(0xFF6A3D8F);
+  static const flagSoft = Color(0xFFFFF1CF);
+  static const flag = Color(0xFF8A5A00);
 
   static const skeleton = Color(0xFFEBE3D1);
 
