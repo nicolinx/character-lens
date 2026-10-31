@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:character_lens/data/ai/explanation_model.dart';
 import 'package:character_lens/data/ai/explanation_parser.dart';
 import 'package:character_lens/data/ai/explanation_prompt_builder.dart';
+import 'package:character_lens/data/ai/prompt_v1.dart' as prompt;
 import 'package:character_lens/domain/dictionary/character_entry.dart';
 import 'package:character_lens/domain/dictionary/han_language.dart';
 import 'package:character_lens/domain/explainer/explainer.dart';
@@ -10,11 +11,11 @@ import 'package:character_lens/domain/explainer/explanation.dart';
 import 'package:character_lens/domain/explainer/explanation_failure.dart';
 
 /// Explains a character with a language model, grounded on its dictionary
-/// entry. It works with any [ExplanationModel]; the Gemini call itself is in
+/// entry. Works with any [ExplanationModel]; the Gemini call is in
 /// `FirebaseExplanationModel`.
 ///
-/// An answer that does not follow the schema is asked for once more, then
-/// dropped. Any other failure is not retried.
+/// An invalid answer is asked for once more, then dropped. Other failures are
+/// not retried.
 class LlmExplainer implements Explainer {
   LlmExplainer(
     this._model, {
@@ -22,17 +23,19 @@ class LlmExplainer implements Explainer {
     this.timeout = defaultTimeout,
   }) : _promptBuilder = promptBuilder ?? ExplanationPromptBuilder();
 
-  /// For each attempt. In 20 calls the slowest took 8.7 s and the median was
-  /// 3.2 to 3.9 s, so this leaves room without leaving the skeleton up for
-  /// long. It was not tuned further.
+  /// Per attempt. In 20 calls the slowest took 8.7 s and the median was 3.2 to
+  /// 3.9 s, so this leaves room without a long skeleton. Not tuned further.
   static const defaultTimeout = Duration(seconds: 15);
 
-  /// One answer, and one more when the first is invalid.
+  /// One answer, plus one retry when the first is invalid.
   static const attempts = 2;
 
   final ExplanationModel _model;
   final ExplanationPromptBuilder _promptBuilder;
   final Duration timeout;
+
+  @override
+  String get promptVersion => prompt.promptVersion;
 
   @override
   Future<Explanation> explain(

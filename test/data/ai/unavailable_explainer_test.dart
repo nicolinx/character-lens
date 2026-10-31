@@ -16,4 +16,8 @@ void main() {
       );
     }
   });
+
+  test('still names the real prompt version, so cached answers are found', () {
+    expect(UnavailableExplainer().promptVersion, 'prompt_v1');
+  });
 }

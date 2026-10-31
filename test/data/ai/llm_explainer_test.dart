@@ -51,6 +51,12 @@ Object? _run(
 }
 
 void main() {
+  test('names the prompt version of the prompts it sends', () {
+    final explainer = LlmExplainer(FakeExplanationModel([_valid]));
+
+    expect(explainer.promptVersion, promptVersion);
+  });
+
   group('a valid answer', () {
     test('becomes an Explanation, with one call', () {
       final model = FakeExplanationModel([_valid]);
