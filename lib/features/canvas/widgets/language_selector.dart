@@ -65,6 +65,7 @@ class _LanguageTab extends StatelessWidget {
       selected: selected,
       label: '${language.name}, ${describeModelStatus(status)}',
       excludeSemantics: true,
+      onTap: onTap,
       child: InkWell(
         onTap: onTap,
         child: Container(

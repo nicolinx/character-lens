@@ -4,6 +4,7 @@ import 'package:character_lens/app.dart';
 import 'package:character_lens/domain/ink/ink_language.dart';
 import 'package:character_lens/domain/ink/model_status.dart';
 import 'package:character_lens/domain/ink/ink_failure.dart';
+import 'package:character_lens/features/canvas/controllers/canvas_controller.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
 import 'package:flutter/material.dart';
@@ -109,5 +110,27 @@ void main() {
 
     expect(size.height, greaterThanOrEqualTo(48));
     expect(size.width, greaterThanOrEqualTo(48));
+  });
+
+  testWidgets('the language tabs can be activated by a screen reader', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final recognizer = FakeInkRecognizer()
+      ..statuses[InkLanguage.chinese] = const ModelReady()
+      ..statuses[InkLanguage.japanese] = const ModelReady();
+    await _pump(tester, recognizer);
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(CharacterLensApp)),
+    );
+
+    tester.semantics.tap(find.semantics.byLabel(RegExp('^Japanese')));
+    await tester.pump();
+
+    expect(
+      container.read(canvasControllerProvider).language,
+      InkLanguage.japanese,
+    );
+    handle.dispose();
   });
 }
