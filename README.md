@@ -24,7 +24,6 @@ Built:
 
 Planned:
 
-- [ ] Evaluation script with real results
 - [ ] Demo video and case study
 
 ## Tech stack
@@ -203,7 +202,7 @@ Strokes never leave the device. The AI request holds only the recognized charact
 
 - The AI explanation is labeled and its example readings are checked, but the check is loose. "Verified" means the dictionary does not disagree, not that the word's reading is right, and correct readings with sound changes (学校 is がっこう) get flagged. Components, memory hooks and usage notes are not checked at all, and a memory hook can be plausible-sounding folk etymology. See [ADR 005](docs/adr/005-grounded-llm.md).
 - AI latency varies a lot. On an emulator the spike had medians of 3.2 to 3.9 s (20 calls), and a second run had a median of 6.2 s with one call at 24 s, past the 15 s timeout (11 calls, a poor network at the time). The "under 4 s" target is not shown to be met, and it was not measured on a physical device. App Check with Play Integrity is not confirmed to be enforced yet.
-- There is no evaluation on a larger set yet.
+- No formal evaluation of the AI explanations was run. The checks that were done are small, and they are listed in [docs/ai-usage.md](docs/ai-usage.md).
 - Pronunciation comes from the device's voice engine. It reads the character in its own way, which can differ from the reading in the dictionary card. Korean engines often cannot read Hanja.
 - Unihan does not link every pair of simplified, traditional and Japanese forms. For some characters a reading is borrowed from one linked variant, and the card says so. Other pairs stay unlinked.
 - Recognition quality comes from ML Kit. The decision record has the measurements taken so far, and they are small.
