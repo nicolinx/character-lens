@@ -58,8 +58,8 @@ flowchart LR
   App --> DB
   App --> TTS
   App --> Cache
-  MLKit -. first use of a language .-> Google
-  App -. character + dictionary entry .-> Gemini
+  MLKit -.->|first use of a language| Google
+  App -.->|character + dictionary entry| Gemini
 ```
 
 From stroke to result:
@@ -112,8 +112,8 @@ flowchart TB
   result --> UC
   history --> UC
   UC --> IF
-  data -. implements .-> IF
-  main[main.dart] -. wires .-> data
+  data -.->|implements| IF
+  main[main.dart] -.->|wires| data
 ```
 
 - **Features** hold screens, widgets and Riverpod controllers. They know the domain interfaces, never the concrete classes.
@@ -121,6 +121,19 @@ flowchart TB
 - **Data** implements the interfaces. `main.dart` is the only place that names the concrete classes and overrides the providers, and tests override them with fakes.
 - **State** is a sealed class per concern: `CanvasState`, `LookupState`, `SpeechState`, `ExplainState` and `HistoryState`. The result sheet has its own state so closing it leaves the strokes and candidates as they were. See [ADR 004](docs/adr/004-riverpod-sealed-states.md).
 - **Failures** are typed (`InkFailure`, `DictionaryFailure`, `ExplanationFailure`), and each one ends in a message the user can read.
+
+Who listens to whom: one state, the lookup of a character, is the hub. The AI card and the history listen to it and never change it.
+
+```mermaid
+flowchart LR
+  Look[Look up button<br>or History tile] --> Lookup[LookupController]
+  Lookup -.->|listens| Explain[ExplainController]
+  Lookup -.->|listens| History[HistoryController]
+  Explain --> UC[ExplainCharacter]
+  History --> Store[(history.db)]
+```
+
+More in [docs/architecture.md](docs/architecture.md).
 
 Decision records: [ADR 001](docs/adr/001-ml-kit-digital-ink.md) for recognition, [ADR 002](docs/adr/002-unihan-dictionary.md) for the dictionary, [ADR 003](docs/adr/003-firebase-ai-logic.md) for Gemini through Firebase AI Logic, [ADR 004](docs/adr/004-riverpod-sealed-states.md) for state and [ADR 005](docs/adr/005-grounded-llm.md) for the grounding and the validator. [docs/data-flow.md](docs/data-flow.md) follows a drawing from strokes to result and lists every failure path with its test, and [docs/ai-usage.md](docs/ai-usage.md) covers the AI parts, their cost and their limits.
 
