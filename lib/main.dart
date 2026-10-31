@@ -13,12 +13,14 @@ import 'package:character_lens/data/ai/firebase_explanation_model.dart';
 import 'package:character_lens/data/ai/llm_explainer.dart';
 import 'package:character_lens/data/ai/unavailable_explainer.dart';
 import 'package:character_lens/data/cache/sqlite_explanation_cache.dart';
+import 'package:character_lens/data/cache/sqlite_lookup_history.dart';
 import 'package:character_lens/data/dictionary/sqlite_dictionary.dart';
 import 'package:character_lens/data/ink/ml_kit_ink_recognizer.dart';
 import 'package:character_lens/data/tts/flutter_tts_service.dart';
 import 'package:character_lens/domain/explainer/explainer.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
+import 'package:character_lens/features/history/controllers/lookup_history_provider.dart';
 import 'package:character_lens/features/result/controllers/explainer_provider.dart';
 import 'package:character_lens/features/result/controllers/explanation_cache_provider.dart';
 import 'package:character_lens/features/result/controllers/tts_service_provider.dart';
@@ -59,6 +61,13 @@ Future<void> main() async {
           );
           ref.onDispose(cache.close);
           return cache;
+        }),
+        lookupHistoryProvider.overrideWith((ref) {
+          final history = SqliteLookupHistory(
+            databaseFactory: sqflite.databaseFactory,
+          );
+          ref.onDispose(history.close);
+          return history;
         }),
         ttsServiceProvider.overrideWith((ref) {
           final service = FlutterTtsService(FlutterTts());

@@ -10,6 +10,7 @@ import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
+import 'package:character_lens/features/history/controllers/lookup_history_provider.dart';
 import 'package:character_lens/features/result/controllers/explainer_provider.dart';
 import 'package:character_lens/features/result/controllers/explanation_cache_provider.dart';
 import 'package:character_lens/features/result/controllers/lookup_controller.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_dictionary.dart';
+import '../../support/fake_lookup_history.dart';
 import '../../support/fake_explainer.dart';
 import '../../support/fake_explanation_cache.dart';
 import '../../support/fake_ink_recognizer.dart';
@@ -90,6 +92,7 @@ Future<_Screen> _pump(WidgetTester tester) async {
     ProviderScope(
       overrides: [
         inkRecognizerProvider.overrideWithValue(recognizer),
+        lookupHistoryProvider.overrideWithValue(FakeLookupHistory()),
         dictionaryProvider.overrideWithValue(dictionary),
         ttsServiceProvider.overrideWithValue(tts),
         explainerProvider.overrideWithValue(explainer),
@@ -425,6 +428,73 @@ void main() {
 
       expect(find.text('Explain it'), findsNothing);
       expect(screen.canvas, isA<CanvasResult>());
+    });
+  });
+
+  group('the history', () {
+    Future<void> openHistory(WidgetTester tester) async {
+      await tester.tap(find.text('History'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('lists a character once it was looked up', (tester) async {
+      final screen = await _pump(tester);
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+
+      await openHistory(tester);
+
+      expect(find.text('1 character · saved on this device'), findsOneWidget);
+      expect(find.text('语'), findsOneWidget);
+    });
+
+    testWidgets('lists a character looked up twice only once', (tester) async {
+      final screen = await _pump(tester);
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+
+      await openHistory(tester);
+
+      expect(find.text('1 character · saved on this device'), findsOneWidget);
+    });
+
+    testWidgets('a character can be opened again from the list', (
+      tester,
+    ) async {
+      final screen = await _pump(tester);
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+      await openHistory(tester);
+
+      await tester.tap(find.text('语'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Verified · Unihan'), findsOneWidget);
+      expect(find.text('A memory aid.'), findsOneWidget);
+      expect(screen.explainer.calls, hasLength(1));
+    });
+
+    testWidgets('a lookup that found nothing is not listed', (tester) async {
+      final screen = await _pump(tester);
+      screen.dictionary.lookupErrors['語'] =
+          const DictionaryUnavailableFailure();
+      await screen.drawAndRecognize();
+      await screen.tapLookUp('語');
+      await screen.closeSheet();
+
+      await openHistory(tester);
+
+      expect(
+        find.text(
+          'Characters you look up appear here, and open instantly offline.',
+        ),
+        findsOneWidget,
+      );
     });
   });
 }

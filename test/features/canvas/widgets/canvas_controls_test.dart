@@ -11,11 +11,13 @@ import 'package:character_lens/features/canvas/controllers/canvas_state.dart';
 import 'package:character_lens/features/canvas/controllers/ink_recognizer_provider.dart';
 import 'package:character_lens/features/canvas/widgets/writing_pad.dart';
 import 'package:character_lens/features/dictionary_provider.dart';
+import 'package:character_lens/features/history/controllers/lookup_history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../support/fake_dictionary.dart';
+import '../../../support/fake_lookup_history.dart';
 import '../../../support/fake_ink_recognizer.dart';
 
 class _Screen {
@@ -63,6 +65,7 @@ Future<_Screen> _pump(
     ProviderScope(
       overrides: [
         inkRecognizerProvider.overrideWithValue(fake),
+        lookupHistoryProvider.overrideWithValue(FakeLookupHistory()),
         dictionaryProvider.overrideWithValue(
           dictionary ?? FakeDictionary.bare('木末本朮禾'),
         ),
