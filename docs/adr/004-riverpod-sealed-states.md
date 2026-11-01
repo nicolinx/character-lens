@@ -36,7 +36,7 @@ Layers: presentation (`features/`) depends on domain, `data/` implements the dom
 
 - `flutter test` runs 122 tests at the time of writing, and `flutter analyze` is clean. The state tests use `ProviderContainer` with overrides and `fakeAsync` for the debounce. Covered transitions include Idle to Recognizing to Result, Idle to Recognizing to Error, undo and clear, a new stroke during the pause cancelling it, input locked while recognizing, and an empty result.
 - I checked that some tests can fail by breaking the code on purpose: removing the one-finger guard, removing the claim that stops the page from scrolling during a stroke, and removing the "not while recognizing" lock on Undo, Clear and Analyze each made a test fail.
-- Drawing was checked by eye on a physical device. **No frame timing was measured,** so I make no claim about frame rate.
+- Drawing was checked by eye on an Android emulator. **No frame timing was measured,** so I make no claim about frame rate.
 
 ## Consequences
 
