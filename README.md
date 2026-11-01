@@ -2,7 +2,36 @@
 
 Draw a Chinese or Japanese character with your finger and look it up. The app recognizes the strokes on the device, then shows the reading, the meaning, and how the same character is written and read in Chinese, Japanese and Korean (Hanja).
 
-It is a portfolio project and still in progress. The product spec is in [docs/prd.md](docs/prd.md) and the decisions so far are in [docs/adr](docs/adr).
+It is a portfolio project and still in progress. The story of how it was built, what was measured and what was not is in the [case study](docs/case-study.md). The product spec is in [docs/prd.md](docs/prd.md) and the decisions so far are in [docs/adr](docs/adr).
+
+## Demo
+
+<img src="docs/images/demo.gif" width="270" alt="Drawing 山, looking it up, the dictionary card appearing while the AI card loads, then the AI card filling in">
+
+Drawing 山 and looking it up. The dictionary card appears first, the AI card shows grey bars while the model answers, then fills in. Recorded on an Android emulator.
+
+## Screenshots
+
+Taken from a release build on an Android emulator.
+
+<table>
+  <tr>
+    <td><img src="docs/images/canvas.png" width="180" alt="Drawing 我 on the pad with two candidates"></td>
+    <td><img src="docs/images/result.png" width="180" alt="Result sheet with the dictionary card"></td>
+    <td><img src="docs/images/ai-loading.png" width="180" alt="Dictionary card filled while the AI card loads"></td>
+    <td><img src="docs/images/ai-card.png" width="180" alt="AI card with an unverified reading"></td>
+    <td><img src="docs/images/history.png" width="180" alt="History tab"></td>
+  </tr>
+  <tr>
+    <td>Draw, then pick a candidate</td>
+    <td>Dictionary card first</td>
+    <td>AI card loads separately</td>
+    <td>AI card, with a flagged reading</td>
+    <td>History</td>
+  </tr>
+</table>
+
+In the fourth screenshot, ものがたり for 物語 is flagged as unverified even though it is a correct reading. The check compares against the dictionary readings of 語, and the sound change from かたり to がたり is a known limit (see [Known limits](#known-limits)).
 
 ## Features
 
@@ -21,11 +50,11 @@ Built:
 - [x] Explanations cached per character, language and prompt version, so each character costs one model call
 - [x] History of the last 50 characters, reopened from the cache without a network
 - [x] Unit and widget tests, run with `flutter analyze` and `flutter test` in GitHub Actions
+- [x] A demo GIF and a [case study](docs/case-study.md)
 
 Planned:
 
-- [ ] Evaluation script with real results
-- [ ] Demo video and case study
+- [ ] The full demo video, uploaded and linked here
 
 ## Tech stack
 
@@ -59,8 +88,8 @@ flowchart LR
   App --> DB
   App --> TTS
   App --> Cache
-  MLKit -. first use of a language .-> Google
-  App -. character + dictionary entry .-> Gemini
+  MLKit -.->|first use of a language| Google
+  App -.->|character + dictionary entry| Gemini
 ```
 
 From stroke to result:
@@ -113,8 +142,8 @@ flowchart TB
   result --> UC
   history --> UC
   UC --> IF
-  data -. implements .-> IF
-  main[main.dart] -. wires .-> data
+  data -.->|implements| IF
+  main[main.dart] -.->|wires| data
 ```
 
 - **Features** hold screens, widgets and Riverpod controllers. They know the domain interfaces, never the concrete classes.
@@ -122,6 +151,19 @@ flowchart TB
 - **Data** implements the interfaces. `main.dart` is the only place that names the concrete classes and overrides the providers, and tests override them with fakes.
 - **State** is a sealed class per concern: `CanvasState`, `LookupState`, `SpeechState`, `ExplainState` and `HistoryState`. The result sheet has its own state so closing it leaves the strokes and candidates as they were. See [ADR 004](docs/adr/004-riverpod-sealed-states.md).
 - **Failures** are typed (`InkFailure`, `DictionaryFailure`, `ExplanationFailure`), and each one ends in a message the user can read.
+
+Who listens to whom: one state, the lookup of a character, is the hub. The AI card and the history listen to it and never change it.
+
+```mermaid
+flowchart LR
+  Look[Look up button<br>or History tile] --> Lookup[LookupController]
+  Lookup -.->|listens| Explain[ExplainController]
+  Lookup -.->|listens| History[HistoryController]
+  Explain --> UC[ExplainCharacter]
+  History --> Store[(history.db)]
+```
+
+More in [docs/architecture.md](docs/architecture.md).
 
 Decision records: [ADR 001](docs/adr/001-ml-kit-digital-ink.md) for recognition, [ADR 002](docs/adr/002-unihan-dictionary.md) for the dictionary, [ADR 003](docs/adr/003-firebase-ai-logic.md) for Gemini through Firebase AI Logic, [ADR 004](docs/adr/004-riverpod-sealed-states.md) for state and [ADR 005](docs/adr/005-grounded-llm.md) for the grounding and the validator. [docs/data-flow.md](docs/data-flow.md) follows a drawing from strokes to result and lists every failure path with its test, and [docs/ai-usage.md](docs/ai-usage.md) covers the AI parts, their cost and their limits.
 
@@ -160,9 +202,9 @@ The AI explanation needs Firebase settings. They are optional and kept out of th
 
 ## Tests
 
-624 tests: domain rules, the dictionary builder, SQLite access, the ML Kit adapter and the Gemini caller with fakes, controllers with `fake_async`, and widget tests that drive the real screen, including 1.5x text scale on a narrow screen.
+630 tests: domain rules, the dictionary builder, SQLite access, the ML Kit adapter and the Gemini caller with fakes, controllers with `fake_async`, and widget tests that drive the real screen, including 1.5x text scale on a narrow screen.
 
-Line coverage of the files the tests load, measured with `flutter test --coverage` on 2026-10-31:
+Line coverage of the files the tests load, measured with `flutter test --coverage` on 2026-10-31, before the About sheet and its 6 tests were added:
 
 | Area | Lines covered |
 | --- | --- |
@@ -203,7 +245,7 @@ Strokes never leave the device. The AI request holds only the recognized charact
 
 - The AI explanation is labeled and its example readings are checked, but the check is loose. "Verified" means the dictionary does not disagree, not that the word's reading is right, and correct readings with sound changes (学校 is がっこう) get flagged. Components, memory hooks and usage notes are not checked at all, and a memory hook can be plausible-sounding folk etymology. See [ADR 005](docs/adr/005-grounded-llm.md).
 - AI latency varies a lot. On an emulator the spike had medians of 3.2 to 3.9 s (20 calls), and a second run had a median of 6.2 s with one call at 24 s, past the 15 s timeout (11 calls, a poor network at the time). The "under 4 s" target is not shown to be met, and it was not measured on a physical device. App Check with Play Integrity is not confirmed to be enforced yet.
-- There is no evaluation on a larger set yet.
+- No formal evaluation of the AI explanations was run. The checks that were done are small, and they are listed in [docs/ai-usage.md](docs/ai-usage.md).
 - Pronunciation comes from the device's voice engine. It reads the character in its own way, which can differ from the reading in the dictionary card. Korean engines often cannot read Hanja.
 - Unihan does not link every pair of simplified, traditional and Japanese forms. For some characters a reading is borrowed from one linked variant, and the card says so. Other pairs stay unlinked.
 - Recognition quality comes from ML Kit. The decision record has the measurements taken so far, and they are small.

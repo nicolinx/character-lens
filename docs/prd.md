@@ -17,7 +17,7 @@ What changed from v1: scoped to Han characters so cross-language matching is rea
 ### 1.1 Portfolio goals (these are requirements, not extras)
 
 1. Ships as a working Android/iOS app with a demo video.
-2. Demonstrates on-device ML, offline-first data, and a _grounded_ LLM feature with evaluation.
+2. Demonstrates on-device ML, offline-first data, and a _grounded_ LLM feature with a validator.
 3. Comes with real documentation: system design, data flow, AI usage, decisions, and a case study (section 8).
 
 ### 1.2 Scope
@@ -162,7 +162,7 @@ Failure paths to document and test: model not downloaded, empty recognition, cha
 - **Two AI components:** on-device handwriting recognition (ML Kit) and a cloud LLM for explanations. Explain why each runs where it does (privacy and latency vs. generative ability).
 - **Grounding:** dictionary entry in the prompt, schema-constrained output, validator, UI separation of verified vs. AI content.
 - **Prompt and schema** kept in the repo, versioned (`prompt_v1`), with the reasoning for each constraint.
-- **Evaluation:** a small eval set of about 30 characters (mix of simple, compound, CN/JP-divergent). A script runs the explainer and checks: valid schema, readings consistent with dictionary, no contradicting definition. Report pass rate and failure examples in the case study. This is the most valuable part for a portfolio.
+- **Evaluation:** no formal eval was run. Decision 2026-10-31: the eval script was dropped for scope and effort. The docs report what was measured instead (the spike, an emulator pass, the validator tests) and say it is not an evaluation.
 - **Cost and latency:** measure average tokens and response time, show the effect of caching.
 - **Limits:** the mnemonic and component explanations are plausible-sounding folk etymology at times; the UI says so, and the doc says so.
 
@@ -184,7 +184,7 @@ Built progressively, not at the end. Each milestone below lists the doc it produ
 docs/
   architecture.md     context + container diagram, layers, package choices
   data-flow.md        the sequence diagram above, plus failure paths
-  ai-usage.md         grounding design, prompt, schema, evals, cost/latency, limits
+  ai-usage.md         grounding design, prompt, schema, what was checked, cost/latency, limits
   adr/                001 ml-kit, 002 unihan, 003 firebase-ai-logic, 004 riverpod, 005 grounded-llm
   case-study.md       problem, constraints, decisions, what went wrong, results, what I'd do next
 README.md             pitch, GIF/demo video, feature list, architecture thumbnail, run instructions, license
@@ -192,13 +192,13 @@ README.md             pitch, GIF/demo video, feature list, architecture thumbnai
 
 **README must have:** one-line pitch, demo GIF, "How it works" with the diagram, tech stack, how to run (including Firebase setup without committing secrets), link to the case study.
 
-**Case-study outline:** (1) the problem and who has it, (2) why handwriting and why on-device, (3) why the LLM is grounded and not the source of truth, (4) the hardest bug or trade-off (likely candidate ranking, Han variants, or LLM output validation), (5) eval results with numbers, (6) what I would change.
+**Case-study outline:** (1) the problem and who has it, (2) why handwriting and why on-device, (3) why the LLM is grounded and not the source of truth, (4) the hardest bug or trade-off (likely candidate ranking, Han variants, or LLM output validation), (5) what was measured and what was not, with the small numbers there are (no eval was run), (6) what I would change.
 
 **LinkedIn content (derived from the docs, 3 posts):**
 
 1. The demo video and the problem ("I can't type a character I can't pronounce").
 2. Why the LLM is not the source of truth: the grounding and validator design, with the diagram.
-3. The eval results: pass rate, what failed, what I changed.
+3. The system design: on-device recognition, offline dictionary, cloud model, and the controllers that listen to one lookup state.
 
 **Repo hygiene for GitHub:** pinned repo description and topics (flutter, riverpod, mlkit, gemini, clean-architecture), CI running `flutter analyze` and tests, screenshots in `docs/images/`, MIT license plus Unihan attribution.
 
@@ -211,9 +211,9 @@ README.md             pitch, GIF/demo video, feature list, architecture thumbnai
 | M1  | Canvas, strokes, ML Kit recognition with candidate chips, model download state                   | ADR 001, 004                               |
 | M2  | Unihan-derived SQLite builder script, dictionary lookup, result sheet, TTS                       | ADR 002, `data-flow.md`                    |
 | M3  | Firebase AI Logic explainer, schema, validator, cache, history                                   | ADR 003, 005, `ai-usage.md`                |
-| M4  | Eval script and results, tests (stroke mapper, dictionary, validator, state), polish, demo video | `case-study.md`, README, `architecture.md` |
+| M4  | Tests (stroke mapper, dictionary, validator, state), polish, demo video (no eval) | `case-study.md`, README, `architecture.md` |
 
-Cut order if time runs short: history, then the CN/JP usage note, then undo. Never cut the validator or the evals; they are the case study.
+Cut order if time runs short: history, then the CN/JP usage note, then undo. Never cut the validator.
 
 ---
 
@@ -221,7 +221,7 @@ Cut order if time runs short: history, then the CN/JP usage note, then undo. Nev
 
 - Draw 木, 水, 日, 語, 学 in both CN and JP and get the intended character in the top 5 candidates.
 - Dictionary card appears without waiting for the LLM, and works in airplane mode after models are downloaded.
-- AI section never shows a reading that contradicts the dictionary (validated on the eval set).
+- AI example readings the dictionary does not confirm are marked unverified (validator tests, and checks on the emulator).
 - Every failure path in section 5 shows a non-crashing, understandable state.
 - `docs/` and README complete; demo video recorded; repo public with CI green.
 

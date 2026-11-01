@@ -18,14 +18,13 @@ words).
 It is a **portfolio piece**, not a product launch. It exists to show:
 
 - On-device ML (ML Kit Digital Ink) and offline-first data (SQLite).
-- A grounded LLM feature with evaluation (Gemini via Firebase AI Logic), where
-  the LLM is an explainer, not the source of truth.
+- A grounded LLM feature (Gemini via Firebase AI Logic), where the LLM is an
+  explainer, not the source of truth. No formal eval was run, see below.
 - Clean Architecture, documented decisions (ADRs), tests, CI.
 - A case study and 3 LinkedIn posts derived from the docs.
 
-So **documentation and evals are requirements, not extras**. Cut order if time
-runs short: history, then the CN/JP usage note, then undo. Never cut the
-validator or the evals.
+So **documentation is a requirement, not an extra**. Cut order if time runs
+short: history, then the CN/JP usage note, then undo. Never cut the validator.
 
 - Target: finished, well-documented app in about 2 to 3 weeks part-time.
 - MVP input: Chinese (Hanzi) and Japanese (Kanji), single characters.
@@ -94,7 +93,7 @@ serif type, vermilion seal, light mode only). Match it when building screens.
   if it earns its keep; the PRD says no codegen for storage).
 - Match the surrounding code's style, comment density, and naming.
 - Tests required for: stroke mapper, dictionary lookup, validator, state
-  transitions. Eval script is separate from unit tests.
+  transitions.
 - `flutter analyze` and `flutter test` must pass before any commit. CI runs both.
 - Non-functional targets: recognition under 500 ms, dictionary lookup under
   50 ms, AI explanation under 4 s typical with a skeleton, 48 dp tap targets,
@@ -109,24 +108,24 @@ Each milestone ships its doc, not at the end.
 | M1 | Canvas, strokes, ML Kit recognition, candidate chips, model download state | ADR 001, 004 |
 | M2 | Unihan SQLite builder script, lookup, result sheet, TTS | ADR 002, `data-flow.md` |
 | M3 | Firebase AI Logic explainer, schema, validator, cache, history | ADR 003, 005, `ai-usage.md` |
-| M4 | Eval script and results, tests, polish, demo video | `case-study.md`, README, `architecture.md` |
+| M4 | Tests, polish, demo video (no eval, see Evaluation) | `case-study.md`, README, `architecture.md` |
 
 Docs layout: `docs/architecture.md`, `docs/data-flow.md`, `docs/ai-usage.md`,
 `docs/adr/`, `docs/case-study.md`, plus `README.md` (pitch, demo GIF, diagram,
 stack, run instructions, case-study link).
 
-### Eval set
+### Evaluation
 
-About 30 characters (simple, compound, CN/JP-divergent). Script checks: valid
-schema, readings consistent with the dictionary, no contradicting definition.
-Report real pass rate and real failure examples. **Never tune the eval to hide
-failures**; the honest result is the content.
+No formal eval was run (decision 2026-10-31, scope and effort). Docs and posts
+say so, and report only what was measured: the spike, the emulator pass and the
+validator tests. Never call those an eval, a pass rate or a validation set.
 
 ### Acceptance criteria (summary)
 
 - 木, 水, 日, 語, 学 drawn in CN and JP appear in the top 5 candidates.
 - Dictionary card works in airplane mode after models download.
-- AI section never shows a reading contradicting the dictionary on the eval set.
+- AI example readings the dictionary does not confirm are marked unverified
+  (validator tests, and checks on the emulator).
 - Every failure path shows a non-crashing, understandable state: model not
   downloaded, empty recognition, character not in dictionary, LLM timeout or
   invalid JSON, no TTS voice.
@@ -144,8 +143,8 @@ failures**; the honest result is the content.
 Everything published about this project is employer- and client-facing.
 
 - **Factual accuracy outranks polish.** Do not invent metrics, pass rates,
-  latencies, or results. Eval numbers come from actual runs. If something was
-  not measured, say so.
+  latencies, or results. Numbers come from actual runs. If something was not
+  measured, say so.
 - Concrete engineering language. Lead with what was built and the real number.
 - **No em dashes** in prose; use commas.
 - Banned stock phrases: "results-driven," "proven track record," "passionate,"
@@ -162,4 +161,5 @@ Everything published about this project is employer- and client-facing.
 1. Demo video and the problem: "I can't type a character I can't pronounce."
 2. Why the LLM is not the source of truth: grounding and validator, with the
    diagram.
-3. Eval results: pass rate, what failed, what I changed.
+3. The system design: on-device recognition, offline dictionary, cloud model,
+   and the controllers that listen to one lookup state.

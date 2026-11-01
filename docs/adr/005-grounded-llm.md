@@ -66,7 +66,7 @@ Apart from the first limit, they make the check stricter: a correct reading gets
 
 On 20 distinct examples (5 characters, Chinese and Japanese), 17 were verified and 3 were unverified. All 3 were correct readings caught by the limits above (日本 にほん, 物語 ものがたり, 学校 がっこう). No wrong reading was found, and no false "verified" was seen, but 20 examples cannot show there is none.
 
-The validator cannot see everything. For 学 the model listed 宀, 爻 and 子 as components and wrote a usage note saying the traditional form 學 is often still used in formal contexts or names in Japan. Both look doubtful and were not checked against a reference. This is why the mnemonic is labeled as a memory aid. The evaluation in M4 is where this gets measured on about 30 characters. Nothing there is claimed yet.
+The validator cannot see everything. For 学 the model listed 宀, 爻 and 子 as components and wrote a usage note saying the traditional form 學 is often still used in formal contexts or names in Japan. Both look doubtful and were not checked against a reference. This is why the mnemonic is labeled as a memory aid. No larger check was run: see "What was checked, and what was not" in [ai-usage.md](../ai-usage.md).
 
 ## The cache
 

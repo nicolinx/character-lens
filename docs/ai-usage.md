@@ -65,7 +65,7 @@ The controller only reads the lookup state. It starts when the lookup is loaded 
 - The prompt text and the schema are in the repo: `lib/data/ai/prompt_v1.dart` and `lib/data/ai/explanation_schema.dart`.
 - `promptVersion` (`prompt_v1`) is part of the cache key. Change it with any change to the prompt, the schema, or the model, and the next view of each character asks again.
 - The parser and the schema are tied by a test, so a field cannot be added to one and forgotten in the other.
-- Nothing is evaluated per version yet. The evaluation script is M4.
+- No prompt version was compared with another, because only `prompt_v1` exists.
 
 ## Cost and latency
 
@@ -106,6 +106,24 @@ Seen on the emulator: the offline card, the timeout card (once, for 水 in Japan
 - On the Gemini free tier the pricing page (2026-10-27) says the content is used to improve Google products. A paid plan changes that, and this app does not use one. The README says so too.
 - Firebase settings stay out of the repo. Setup is in [firebase-setup.md](firebase-setup.md).
 
+## What was checked, and what was not
+
+No formal eval was run. It was cut for scope and effort. This is what exists instead, and it is small:
+
+| Check | What it covers | Result |
+| --- | --- | --- |
+| Spike, 2026-10-28 | 20 calls (5 characters in Chinese and Japanese, debug and release). The 20 example words were checked by the validator | 20 of 20 answers parsed. 17 examples verified, 3 unverified (日本 にほん, 物語 ものがたり, 学校 がっこう), all 3 correct readings caught by known limits. No wrong reading seen |
+| Validator and parser tests | Verified and unverified readings per language, sound changes, romaji, tone marks, malformed JSON | `explanation_validator_test`, `kana_romanizer_test`, `explanation_parser_test`, `explain_character_test` pass |
+| Emulator pass, 2026-10-31 | 10 characters (木 水 日 語 学 in Chinese and Japanese), 11 calls. Three AI cards were read against the dictionary by hand: 語 in Japanese (日本語 verified, 物語 unverified), 水 in Chinese (both examples verified), 水 in Japanese (no mark) | The three read cards had no reading that contradicted the dictionary. The other seven were not read |
+
+What this does not show:
+
+- **No fixed list was chosen in advance,** and no pass criteria were written before the runs. The spike and the emulator pass used the same five characters.
+- **Only example readings are checked automatically.** Meanings, components, memory hooks and usage notes are not. No answer was compared with an outside reference. For 学 the model gave components that look doubtful and were not verified. On 2026-11-01, reading the 学 card in Chinese while taking screenshots, I found a wrong usage note: it said the traditional form 學 is still used in Japan, but Japan uses 学. Nothing flagged it, because usage notes are not checked, and the card shows 学 under JP right above it.
+- **No second reviewer,** and no check that a definition in an answer contradicts the dictionary beyond the three cards read by hand.
+- **Small samples.** 20 examples and 10 characters cannot show that a wrong reading never gets through, or that the validator never marks one as verified. Its "contains" rule can, as ADR 005 says.
+- **No prompt version was compared with another.** There is only `prompt_v1`.
+
 ## Known limits
 
 - The validator checks reading syllables and little else. "Verified" means the dictionary does not disagree. See [ADR 005](adr/005-grounded-llm.md).
@@ -113,4 +131,4 @@ Seen on the emulator: the offline card, the timeout card (once, for 水 in Japan
 - Latency is from an emulator with a small sample.
 - App Check with Play Integrity is not proven to be enforced and accepted. Enforcement for Firebase AI Logic starts on 2026-11-02.
 - iOS was never built, and no App Check provider is set up for it.
-- There is no evaluation on a larger set yet. The pass rate and the failures from that run will be in the M4 write-up, as measured.
+- No formal evaluation was run, and the checks that exist are small. See "What was checked, and what was not" above.

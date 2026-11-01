@@ -4,10 +4,10 @@ final Map<String, String> _syllables = _buildSyllables();
 
 Map<String, String> _buildSyllables() {
   final map = <String, String>{};
-  void row(String kana, String consonant, [String vowels = 'AIUEO']) {
+  void row(String kana, String consonant) {
     for (var i = 0; i < kana.length; i++) {
       if (kana[i] == ' ') continue;
-      map[kana[i]] = '$consonant${vowels[i]}'.replaceAll('--', '');
+      map[kana[i]] = '$consonant${_vowels[i]}';
     }
   }
 
