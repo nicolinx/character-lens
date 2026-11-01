@@ -202,9 +202,9 @@ The AI explanation needs Firebase settings. They are optional and kept out of th
 
 ## Tests
 
-624 tests: domain rules, the dictionary builder, SQLite access, the ML Kit adapter and the Gemini caller with fakes, controllers with `fake_async`, and widget tests that drive the real screen, including 1.5x text scale on a narrow screen.
+630 tests: domain rules, the dictionary builder, SQLite access, the ML Kit adapter and the Gemini caller with fakes, controllers with `fake_async`, and widget tests that drive the real screen, including 1.5x text scale on a narrow screen.
 
-Line coverage of the files the tests load, measured with `flutter test --coverage` on 2026-10-31:
+Line coverage of the files the tests load, measured with `flutter test --coverage` on 2026-10-31, before the About sheet and its 6 tests were added:
 
 | Area | Lines covered |
 | --- | --- |
