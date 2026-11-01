@@ -4,6 +4,12 @@ Draw a Chinese or Japanese character with your finger and look it up. The app re
 
 It is a portfolio project and still in progress. The product spec is in [docs/prd.md](docs/prd.md) and the decisions so far are in [docs/adr](docs/adr).
 
+## Demo
+
+<img src="docs/images/demo.gif" width="270" alt="Drawing 山, looking it up, the dictionary card appearing while the AI card loads, then the AI card filling in">
+
+Drawing 山 and looking it up. The dictionary card appears first, the AI card shows grey bars while the model answers, then fills in. Recorded on an Android emulator.
+
 ## Screenshots
 
 Taken from a release build on an Android emulator.
