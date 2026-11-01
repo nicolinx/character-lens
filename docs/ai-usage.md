@@ -119,7 +119,7 @@ No formal eval was run. It was cut for scope and effort. This is what exists ins
 What this does not show:
 
 - **No fixed list was chosen in advance,** and no pass criteria were written before the runs. The spike and the emulator pass used the same five characters.
-- **Only example readings are checked automatically.** Meanings, components, memory hooks and usage notes are not. No answer was compared with an outside reference. For 学 the model gave components and a usage note that look doubtful and were not verified.
+- **Only example readings are checked automatically.** Meanings, components, memory hooks and usage notes are not. No answer was compared with an outside reference. For 学 the model gave components that look doubtful and were not verified. On 2026-11-01, reading the 学 card in Chinese while taking screenshots, I found a wrong usage note: it said the traditional form 學 is still used in Japan, but Japan uses 学. Nothing flagged it, because usage notes are not checked, and the card shows 学 under JP right above it.
 - **No second reviewer,** and no check that a definition in an answer contradicts the dictionary beyond the three cards read by hand.
 - **Small samples.** 20 examples and 10 characters cannot show that a wrong reading never gets through, or that the validator never marks one as verified. Its "contains" rule can, as ADR 005 says.
 - **No prompt version was compared with another.** There is only `prompt_v1`.

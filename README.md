@@ -4,6 +4,29 @@ Draw a Chinese or Japanese character with your finger and look it up. The app re
 
 It is a portfolio project and still in progress. The product spec is in [docs/prd.md](docs/prd.md) and the decisions so far are in [docs/adr](docs/adr).
 
+## Screenshots
+
+Taken from a release build on an Android emulator.
+
+<table>
+  <tr>
+    <td><img src="docs/images/canvas.png" width="180" alt="Drawing 我 on the pad with two candidates"></td>
+    <td><img src="docs/images/result.png" width="180" alt="Result sheet with the dictionary card"></td>
+    <td><img src="docs/images/ai-loading.png" width="180" alt="Dictionary card filled while the AI card loads"></td>
+    <td><img src="docs/images/ai-card.png" width="180" alt="AI card with an unverified reading"></td>
+    <td><img src="docs/images/history.png" width="180" alt="History tab"></td>
+  </tr>
+  <tr>
+    <td>Draw, then pick a candidate</td>
+    <td>Dictionary card first</td>
+    <td>AI card loads separately</td>
+    <td>AI card, with a flagged reading</td>
+    <td>History</td>
+  </tr>
+</table>
+
+In the fourth screenshot, ものがたり for 物語 is flagged as unverified even though it is a correct reading. The check compares against the dictionary readings of 語, and the sound change from かたり to がたり is a known limit (see [Known limits](#known-limits)).
+
 ## Features
 
 Built:
