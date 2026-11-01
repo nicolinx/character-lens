@@ -2,7 +2,7 @@
 
 Draw a Chinese or Japanese character with your finger and look it up. The app recognizes the strokes on the device, then shows the reading, the meaning, and how the same character is written and read in Chinese, Japanese and Korean (Hanja).
 
-It is a portfolio project and still in progress. The product spec is in [docs/prd.md](docs/prd.md) and the decisions so far are in [docs/adr](docs/adr).
+It is a portfolio project and still in progress. The story of how it was built, what was measured and what was not is in the [case study](docs/case-study.md). The product spec is in [docs/prd.md](docs/prd.md) and the decisions so far are in [docs/adr](docs/adr).
 
 ## Demo
 
@@ -50,10 +50,11 @@ Built:
 - [x] Explanations cached per character, language and prompt version, so each character costs one model call
 - [x] History of the last 50 characters, reopened from the cache without a network
 - [x] Unit and widget tests, run with `flutter analyze` and `flutter test` in GitHub Actions
+- [x] A demo GIF and a [case study](docs/case-study.md)
 
 Planned:
 
-- [ ] Demo video and case study
+- [ ] The full demo video, uploaded and linked here
 
 ## Tech stack
 
