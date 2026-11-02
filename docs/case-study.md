@@ -1,6 +1,6 @@
 # Case study: Character Lens
 
-Character Lens is an Android app where you draw a Chinese or Japanese character with a finger and look it up. The strokes are recognized on the device, the reading and meaning come from an offline dictionary, and a separate card shows an AI explanation that is labeled and partly checked. I built it as a portfolio piece in Flutter, as a Senior Flutter Engineer, to show on-device ML, offline-first data, and an LLM feature that is not trusted with facts.
+Character Lens is an Android app where you draw a Chinese or Japanese character with a finger and look it up. The strokes are recognized on the device, the reading and meaning come from an offline dictionary, and a separate card shows an AI explanation that is labeled and partly checked. I built it in Flutter to work through on-device ML, offline-first data, and an LLM feature that is not trusted with facts.
 
 This is the story of the decisions, including what went wrong and what I did not measure. Every number below comes from a run described in the linked docs. Everything was run on an Android emulator. I never ran the app on a physical device, and I never built it for iOS.
 

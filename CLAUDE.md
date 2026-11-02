@@ -1,7 +1,6 @@
 # CLAUDE.md: Character Lens
 
-Flutter app for handwriting-based Han character lookup. Personal notes live in
-`CLAUDE.local.md` (gitignored, not part of this repo).
+Flutter app for handwriting-based Han character lookup.
 
 Full spec: `docs/prd.md`. If this file and the PRD disagree, the PRD
 wins for product scope and this file wins for working rules.
@@ -15,23 +14,19 @@ on-device, then show pronunciation, meaning, cross-language readings (CN, JP,
 KO), and a clearly labeled AI explanation (components, mnemonic, example
 words).
 
-It is a **portfolio piece**, not a product launch. It exists to show:
+What it shows:
 
 - On-device ML (ML Kit Digital Ink) and offline-first data (SQLite).
 - A grounded LLM feature (Gemini via Firebase AI Logic), where the LLM is an
-  explainer, not the source of truth. No formal eval was run, see below.
+  explainer, not the source of truth. No formal eval was run, see Evaluation.
 - Clean Architecture, documented decisions (ADRs), tests, CI.
-- A case study and 3 LinkedIn posts derived from the docs.
 
-So **documentation is a requirement, not an extra**. Cut order if time runs
-short: history, then the CN/JP usage note, then undo. Never cut the validator.
+Documentation is part of the work: each milestone ships its doc.
 
-- Target: finished, well-documented app in about 2 to 3 weeks part-time.
 - MVP input: Chinese (Hanzi) and Japanese (Kanji), single characters.
 - Out of scope for now: Arabic, Hindi, Hangul input, multi-character words,
   bookmarks, stroke-order validation, camera OCR.
-- Keep planning pragmatic. Do not expand scope; a small finished milestone
-  counts as progress.
+- Keep scope small. Do not expand it.
 
 ### Locked decisions (each gets an ADR in `docs/adr/`)
 
@@ -64,7 +59,7 @@ serif type, vermilion seal, light mode only). Match it when building screens.
 
 ## 2. Working rules for Claude Code
 
-### Grounding rules (these are the case-study story, never weaken them)
+### Grounding rules (never weaken them)
 
 1. Readings and definitions shown to the user come **only** from the dictionary,
    never from the LLM.
@@ -108,7 +103,7 @@ Each milestone ships its doc, not at the end.
 | M1 | Canvas, strokes, ML Kit recognition, candidate chips, model download state | ADR 001, 004 |
 | M2 | Unihan SQLite builder script, lookup, result sheet, TTS | ADR 002, `data-flow.md` |
 | M3 | Firebase AI Logic explainer, schema, validator, cache, history | ADR 003, 005, `ai-usage.md` |
-| M4 | Tests, polish, demo video (no eval, see Evaluation) | `case-study.md`, README, `architecture.md` |
+| M4 | Tests, polish, demo GIF (no eval, see Evaluation) | `case-study.md`, README, `architecture.md` |
 
 Docs layout: `docs/architecture.md`, `docs/data-flow.md`, `docs/ai-usage.md`,
 `docs/adr/`, `docs/case-study.md`, plus `README.md` (pitch, demo GIF, diagram,
@@ -129,37 +124,17 @@ validator tests. Never call those an eval, a pass rate or a validation set.
 - Every failure path shows a non-crashing, understandable state: model not
   downloaded, empty recognition, character not in dictionary, LLM timeout or
   invalid JSON, no TTS voice.
-- Docs and README complete, demo video recorded, repo public, CI green.
+- Docs and README complete, demo GIF in the README, CI green.
 
-### Open questions (resolve before the milestone that needs them)
-
-- Shinjitai: map variants via `kSimplifiedVariant`/`kTraditionalVariant`, or
-  document as a known limitation. Decide before M2.
-- Verify `firebase_ai` fits the Flutter/Firebase versions at build time. Fallback:
-  a small Cloudflare Worker proxy. Verify before M3.
-
-## 3. Writing rules (docs, README, case study, LinkedIn posts)
-
-Everything published about this project is employer- and client-facing.
+## 3. Writing rules (docs and README)
 
 - **Factual accuracy outranks polish.** Do not invent metrics, pass rates,
   latencies, or results. Numbers come from actual runs. If something was not
   measured, say so.
 - Concrete engineering language. Lead with what was built and the real number.
-- **No em dashes** in prose; use commas.
-- Banned stock phrases: "results-driven," "proven track record," "passionate,"
-  "leveraging," "spearheaded," "game-changing," "synergy," and similar filler.
-- No hedged asks and no closing question ("Are you hiring?"). End on a plain
-  statement.
+- No em dashes in prose; use commas.
+- No stock filler phrases.
 - Describe limits honestly (for example: mnemonics can be plausible-sounding
   folk etymology, and the docs and UI say so).
 - Unihan attribution stays in the About screen and README (Unicode license).
   Repo license: MIT.
-
-### LinkedIn posts derived from the docs (3)
-
-1. Demo video and the problem: "I can't type a character I can't pronounce."
-2. Why the LLM is not the source of truth: grounding and validator, with the
-   diagram.
-3. The system design: on-device recognition, offline dictionary, cloud model,
-   and the controllers that listen to one lookup state.

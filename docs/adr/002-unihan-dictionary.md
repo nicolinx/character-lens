@@ -43,7 +43,7 @@ A character is kept only if it has at least one reading or a definition. Lists a
 - **Korean uses `kHangul`, not `kKorean`.** `kKorean` is Yale romanization (`MOK`, `SWU`), not Revised Romanization, and the design prototype's "수 (su)" is mock data. `kHangul` gives Hangul directly.
 - **`kDefinition` is not split into senses.** Both `;` and `,` separate senses, but both also appear inside one sense, so it cannot be split reliably. The sheet shows it as one string.
 - **`kJapanese` is stored but unused.** It covers 51,583 characters against 13,177 with an on reading, so its coverage is much wider, and it may include uses that are not Japanese. I did not read its definition in the Unicode specification (UAX #38), so I did not rely on it.
-- **Variants follow a one-hop rule.** This answers the open question in `CLAUDE.md` about shinjitai. See below.
+- **Variants follow a one-hop rule.** This answers the open question in the PRD about shinjitai. See below.
 
 ### The one-hop variant rule
 
