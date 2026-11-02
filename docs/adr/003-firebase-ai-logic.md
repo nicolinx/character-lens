@@ -9,9 +9,9 @@ The app shows an AI explanation (components, a memory hook, example words) under
 
 - No API key in the app or the repo.
 - The dictionary card never waits for it, and the app works without it.
-- No server to run for a portfolio project.
+- No server to run or pay for.
 - Usable on a free tier, so a visitor who clones the repo can try it at no cost.
-- The Flutter and Firebase package versions have to fit. This was an open question in `CLAUDE.md` and is resolved below.
+- The Flutter and Firebase package versions have to fit. This was an open question in the PRD and is resolved below.
 
 ## Decision
 

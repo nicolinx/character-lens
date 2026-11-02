@@ -1,6 +1,6 @@
 # Product Requirements Document: Character Lens (v2)
 
-Status: idea, revised 2026-10-22. Target: a finished, well-documented portfolio app in about 2 to 3 weeks of part-time work.
+Status: revised 2026-10-22. Target: a finished, well-documented app in about 2 to 3 weeks of part-time work.
 
 What changed from v1: scoped to Han characters so cross-language matching is real; recognition candidates added; offline dictionary is the source of truth; the LLM is a grounded "explain" layer, not the data source; API key moved behind Firebase AI Logic; documentation and case-study deliverables are part of the scope.
 
@@ -14,9 +14,9 @@ What changed from v1: scoped to Han characters so cross-language matching is rea
 - **Problem:** people see characters on signs, menus and textbooks but cannot type them into a translator because they do not know the phonetic spelling.
 - **Solution:** handwrite it, pick the right candidate, get verified dictionary data plus a grounded AI explanation.
 
-### 1.1 Portfolio goals (these are requirements, not extras)
+### 1.1 Goals
 
-1. Ships as a working Android/iOS app with a demo video.
+1. Ships as a working Android app with a demo GIF.
 2. Demonstrates on-device ML, offline-first data, and a _grounded_ LLM feature with a validator.
 3. Comes with real documentation: system design, data flow, AI usage, decisions, and a case study (section 8).
 
@@ -187,20 +187,14 @@ docs/
   ai-usage.md         grounding design, prompt, schema, what was checked, cost/latency, limits
   adr/                001 ml-kit, 002 unihan, 003 firebase-ai-logic, 004 riverpod, 005 grounded-llm
   case-study.md       problem, constraints, decisions, what went wrong, results, what I'd do next
-README.md             pitch, GIF/demo video, feature list, architecture thumbnail, run instructions, license
+README.md             pitch, demo GIF, feature list, architecture thumbnail, run instructions, license
 ```
 
 **README must have:** one-line pitch, demo GIF, "How it works" with the diagram, tech stack, how to run (including Firebase setup without committing secrets), link to the case study.
 
 **Case-study outline:** (1) the problem and who has it, (2) why handwriting and why on-device, (3) why the LLM is grounded and not the source of truth, (4) the hardest bug or trade-off (likely candidate ranking, Han variants, or LLM output validation), (5) what was measured and what was not, with the small numbers there are (no eval was run), (6) what I would change.
 
-**LinkedIn content (derived from the docs, 3 posts):**
-
-1. The demo video and the problem ("I can't type a character I can't pronounce").
-2. Why the LLM is not the source of truth: the grounding and validator design, with the diagram.
-3. The system design: on-device recognition, offline dictionary, cloud model, and the controllers that listen to one lookup state.
-
-**Repo hygiene for GitHub:** pinned repo description and topics (flutter, riverpod, mlkit, gemini, clean-architecture), CI running `flutter analyze` and tests, screenshots in `docs/images/`, MIT license plus Unihan attribution.
+**Repo hygiene for GitHub:** repo description and topics (flutter, riverpod, mlkit, gemini, clean-architecture), CI running `flutter analyze` and tests, screenshots in `docs/images/`, MIT license plus Unihan attribution.
 
 ---
 
@@ -211,7 +205,7 @@ README.md             pitch, GIF/demo video, feature list, architecture thumbnai
 | M1  | Canvas, strokes, ML Kit recognition with candidate chips, model download state                   | ADR 001, 004                               |
 | M2  | Unihan-derived SQLite builder script, dictionary lookup, result sheet, TTS                       | ADR 002, `data-flow.md`                    |
 | M3  | Firebase AI Logic explainer, schema, validator, cache, history                                   | ADR 003, 005, `ai-usage.md`                |
-| M4  | Tests (stroke mapper, dictionary, validator, state), polish, demo video (no eval) | `case-study.md`, README, `architecture.md` |
+| M4  | Tests (stroke mapper, dictionary, validator, state), polish, demo GIF (no eval) | `case-study.md`, README, `architecture.md` |
 
 Cut order if time runs short: history, then the CN/JP usage note, then undo. Never cut the validator.
 
@@ -223,11 +217,11 @@ Cut order if time runs short: history, then the CN/JP usage note, then undo. Nev
 - Dictionary card appears without waiting for the LLM, and works in airplane mode after models are downloaded.
 - AI example readings the dictionary does not confirm are marked unverified (validator tests, and checks on the emulator).
 - Every failure path in section 5 shows a non-crashing, understandable state.
-- `docs/` and README complete; demo video recorded; repo public with CI green.
+- `docs/` and README complete; demo GIF in the README; CI green.
 
 ---
 
-## 11. Open questions
+## 11. Open questions (resolved)
 
-- Unihan readings are per codepoint, but Japanese uses its own simplified forms for some characters (shinjitai). Decide whether MVP maps variants through `kSimplifiedVariant`/`kTraditionalVariant` or documents it as a known limitation.
-- Does the Dart `firebase_ai` package still fit your Firebase/Flutter versions at build time? Verify before M3 (fallback: a small Cloudflare Worker proxy).
+- Shinjitai: resolved in [ADR 002](adr/002-unihan-dictionary.md) (one-hop variant rule).
+- Fit of `firebase_ai` with the Flutter and Firebase versions: resolved in [ADR 003](adr/003-firebase-ai-logic.md).

@@ -12,7 +12,7 @@ Constraints that shaped the choice:
 - Strokes are personal input. The project rule is that strokes never leave the device.
 - The app should work offline after setup.
 - There is no backend and no API key in the app bundle.
-- This is a portfolio project, so cost per call and operations work should be near zero.
+- Cost per call and operations work should be near zero.
 
 ## Decision
 
@@ -28,7 +28,7 @@ Use Google ML Kit Digital Ink Recognition, through the Flutter plugin `google_ml
 None of these were built or benchmarked. The reasons below are from their design, not from measurements.
 
 1. **Server-side OCR or an LLM with vision.** The strokes, or an image of them, would go to a server. That breaks the rule that strokes stay on the device, needs a network for every lookup, and adds a per-call cost and a backend or key to manage.
-2. **A custom TensorFlow Lite model.** This would give full control, but I would need training data for Chinese and Japanese handwriting, a training pipeline, and an evaluation of my own. That is a project of its own, and it is not what this portfolio piece is meant to show.
+2. **A custom TensorFlow Lite model.** This would give full control, but I would need training data for Chinese and Japanese handwriting, a training pipeline, and an evaluation of my own. That is a project of its own, and outside the scope of this app.
 3. **Stroke-matching libraries for Han lookup.** There are open-source libraries that match strokes against a character dataset. I did not evaluate their Japanese coverage, their ranking quality, or whether they are maintained. I did not test them, so this is not a claim that they are worse.
 
 ## Evidence
